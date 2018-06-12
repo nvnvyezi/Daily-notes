@@ -1,0 +1,162 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2018-06-09T19:33:58+08:00
+
+====== vue-nextTick ======
+创建日期 星期六 09 六月 2018
+
+1. 浏览器的执行
+>> 浏览器中，一个页面的js的执行依赖于一个主线程，但是用户点击的触发，ajax数据请求，io读取等依赖于其他相应的模块。当主线程的执行堆栈执行完之后，会去读取任务队列，将任务(回调)放入执行堆栈执行，依次循环。任务队列里的任务由各种执行场景触发产生。
+
+2. 任务队列的任务分为宏任务(macroTask)，微任务(microTask)。
+
+>> 宏任务：整段的script, setTimeout, setInterval, setImmediate(IE10), 用户交互操作, io口
+>> 微任务：promise, process.nextTick(nodejs)
+>> 执行顺序：一整段script相当于宏任务，如果里面有其它setTimeout等宏任务触发，便会在其异步场景完成后(如定时完成)推入到宏任务队列。有promise等微任务，则会将其推入到微任务队列，当前的宏任务执行完之后，会去读取微任务队列执行完，接下来进行读取宏任务队列。从这种顺序看来，微任务往往执行于一次事件循环结束，而宏任务执行于下一次事件循环开始。所以promise的执行往往先于setTimeout。
+
+--------------------
+- isnative
+如果你想知道一个指定函数是否是原生的，或者能不能通过声明来覆盖它
+
+Channel Messaging API的Channel Messaging接口允许我们创建一个新的消息通道，并通过它的两个MessagePort 属性发送数据。
+
+Channel Messaging API允许两个独立的脚本在不同的浏览环境（浏览上下文）中连接到同一个文档（例如两个iframes框架或主文档和一个iframe框架，或两个文档通过SharedWorker一个共享工作线程或 两个线程）进行直接通信，通过两端各有一个端口port的双向通道channel（或管道）来传递消息。
+
+=== MessageChannel消息通道 ===
+https://www.cnblogs.com/xiaozhuyuan/p/8419749.html
+
+vue中的nextTick
+
+- 功能： 在下次DOM更新循环结束之后执行延迟回调
+- vue中的nextTink是借助于js的宏任务与微任务，实现执行回调的普通函数
+- vue表明默认使用microTask， 特殊下可以使用macroTask
+
+nextTick 的实现
+
+1. 声明macroTask， macroToask， callbasks， useMacroTask
+2. 各种环境侦测下建立宏任务与微任务
+- 第一轮侦测：
+	a、先检查是否存在settimediate，有则建立宏任务
+	- 该方法用来把一些需要长时间运行的操作放在一个回调函数里,在浏览器完成后面的其他语句后,就立刻执行这个回调函数,
+	b、否则检查是否存在MessageChannel，有则建立宏任务
+	c、否则使用setTimeout建立宏任务
+	
+第二轮侦测:
+	 a、检查是否存在promise，有则建立微任务
+	 b、否则微任务等于宏任务.
+  //3、暴露withMacroTask ,可以往宏任务推入回调
+  //4、暴露nextTick：可以将回调推入微/宏任务等待执行。
+
+
+**vue源码**
+
+// $nextTick目的就是把传进来的函数延迟到dom更新后再使用，所以这里依次优雅降序的使用js的方法来做到这一点。
+
+__const callbasks = [];               //用来存储所有需要执行的回调函数__
+__let pending = false;                //用来标志是否正在执行回调函数__
+__let microTimeFunc = null;__
+__let macroTimeFunc = null;__
+__let useMacroTask = false;__
+
+__//这个函数用来执行callbacks里存储的所有回调函数。__
+__function flushCallbacks () {__
+__  pending = false;__
+__  // copy的复数__
+__  const copies = callbasks.slice(0);__
+__  callbasks.length = 0;__
+__  for (let i = 0, len = copies.length; i < len; i++) {__
+	__copies[i]();__
+__  }  __
+__}__
+
+__// setTimeout采用的是类似IO观察者，setImmediate采用的是check观察者，而process.nextTick()采用的是idle观察者。__
+__// 三种观察者的优先级顺序是：idle观察者>>io观察者>check观察者__
+__if (typeof setImmediate !== undefined && isNative(setImmediate)) {__
+__  macroTimeFunc = () => {__
+	__setImmediate(flushCallbacks);__
+__  }__
+__} else if (typeof MessageChannel !== undefined && (isNative(MessageChannel) __
+__|| MessageChannel.toString() === '[object MessageChannelConstructor]')) {__
+__  const channel = new MessageChannel();__
+__  const port = channel.port2;__
+__  channel.port1.onmessage = flushCallbacks;__
+__  macroTimeFunc = () => {__
+	__port.postMessage(1);__
+__  }__
+__} else {__
+__  macroTimeFunc = () => {__
+	__setTimeout(flushCallbacks, 0);__
+__  }__
+__}__
+__// 如果浏览器支持Promise，那么就用Promise.then的方式来延迟函数调用，Promise.then方法可以将函数延迟到当前函数调用栈最末端，也就是函数调用栈最后调用该函数。从而做到延迟。__
+
+__if (typeof Promise !== undefined && isNative(Promise)) {__
+__  const p = Promise.resolve()__
+__  microTimeFunc = () => {__
+	__p.then(flushCallbacks);__
+	__// in problematic UIWebViews, Promise.then doesn't completely break, but__
+	__// it can get stuck in a weird state where callbacks are pushed into the__
+	__// microtask queue but the queue isn't being flushed, until the browser__
+	__// needs to do some other work, e.g. handle a timer. Therefore we can__
+	__// "force" the microtask queue to be flushed by adding an empty timer.__
+	__// 在问题uiwebview,承诺。__
+	__// 然后不完全打破,但它可以陷入一种奇怪的状态回调是推入microtask队列的队列不被刷新,直到浏览器需要做一些其他的工作,如处理一个计时器。__
+	__// 因此我们可以“迫使”microtask队列刷新通过添加一个空的计时器。__
+
+	__// 在部分 iOS 系统下的 UIWebViews 中，Promise.then 可能并不会被清空，因此我们需要添加额外操作以触发  __
+	__if (isIOS) {__
+	__  setTimeout(noop);__
+	__}__
+__  }__
+__} else {__
+__  microTimeFunc = macroTimeFunc;__
+__}__
+__// 采用promise实现，有意思的一点是针对ios的UIWebViews进行了优化，强行触发了一次microtask的事件处理__
+__// UIWebView是iOS内置的浏览器控件;__
+__// 系统自带的Safari浏览器就是通过UIWebView实现的;__
+
+__// UIWebView不但能加载远程的网页资源，还能加载绝大部分的常见文件__
+__// html\htm__
+__// pdf、doc、ppt、txt__
+__// mp4__
+__// … …__
+__export function WithMacroTask (fn : Function): Function {__
+__  return fn._withTask || fn._withTask = function () {__
+	__useMacroTask = true;__
+	__const res = fn.apply(null, arguments);__
+	__useMacroTask = false;__
+	__return res;__
+__  }__
+__}__
+
+__export function nextTick (cb ? : Function, ctx ? : Object) {__
+__  let _resolve;__
+__  callbasks.push(() => {__
+	__if (cb) {__
+	__  try {__
+		__cb.call(ctx);__
+	__  } catch (err) {__
+		__handleError(e, ctx, 'nextTixk');__
+	__  }__
+	__} else if (_resolve) {__
+	__  _resolve(ctx);__
+	__}__
+__  })__
+__  if (!pending) {__
+	__pending = true;__
+	__if (useMacroTask) {  // 手动指定使用macroTask方式__
+	__  macroTimeFunc();__
+	__} else {__
+	__  microTimeFunc();__
+	__}__
+__  }__
+__  if (!cb && typeof Promise !== undefined) {__
+	__return new Promise(resolve => {__
+	__  _resolve = resolve;__
+	__})__
+__  }__
+__}__ 
+
+
+有一个问题，如果先调用microTask然后接着在其还没有被执行的时候再nextTick一个macroTask（在vue中是绑定的v-dom事件），那么macroTask会在下次执行microTask的时候被执行，这明显是不对的 
+好吧，这个问题和eventloop的触发有关，Vue在所有DOM元素的addEventListener上定义了使用macroTask，所以如果是用户触发，最外层的回掉事件就会首先采用macroTask；而如果使用的是programmatical trigger，则在当前执行栈jsstack内就会触发bubble和capture，不会存在Vue注释里面说的那种问题 
