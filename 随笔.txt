@@ -1,0 +1,68 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2018-06-12T22:13:36+08:00
+
+====== 随笔 ======
+创建日期 星期二 12 六月 2018
+
+**IOS APP中，使用h5播放器，默认打开网页的时候，会自动全屏，解决方法webkit-playsinline**
+
+__<video src="1.mp4" webkit-playsinline playsinline x5-playsinline x-webkit-airplay="allow"></video>__  
+
+
+http://wps-community.org/download.html
+
+1.进入WPS官网下载最新版安装包及字体文件，当前最新的是wps-office_10.1.0.5707~a21_amd64.deb和wps-office-fonts_1.0_all.deb； 
+2.下载libpng12-0；
+wget http://ftp.cn.debian.org/debian/pool/main/libp/libpng/libpng12-0_1.2.49-1+deb7u2_amd64.deb
+$ sudo dpkg -i libpng12-0_1.2.49-1+deb7u2_amd64.deb
+$ sudo dpkg -i wps-office_10.1.0.5707-a21_amd64.deb
+$ sudo dpkg -i wps-office-fonts_1.0_all.deb
+
+
+===== props =====
+
+**type能够指定的类型**
+**type可以是以下原生类型：**
+
+String,Number,Boolean,Function,Object,Array,Symbol
+**required**
+可以使用required选项来声明这个参数是否必须传入。
+**default(当type的类型为Array或者Object的时候default必须是一个函数：)**
+使用default选项来指定当父组件未传入参数时props变量的默认值：
+**validator**
+当校验规则很复杂，默认提供的校验规则无法满足的时候可以使用自定义函数来校验。
+
+ __1 props: {__
+__ 2     // fooA只接受数值类型的参数__
+__ 3     fooA: Number,__
+__ 4     // fooB可以接受字符串和数值类型的参数__
+__ 5     fooB: [String, Number],__
+__ 6     // fooC可以接受字符串类型的参数，并且这个参数必须传入__
+__ 7     fooC: {__
+__ 8         type: String,__
+__ 9         required: true__
+__10     },__
+__11     // fooD接受数值类型的参数，如果不传入的话默认就是100__
+__12     fooD: {__
+__13         type: Number,__
+__14         default: 100__
+__15     },__
+__16     // fooE接受对象类型的参数__
+__17     fooE: {__
+__18         type: Object,__
+__19         // 当为对象类型设置默认值时必须使用函数返回__
+__20         default: function(){__
+__21             return { message: 'Hello, world' }__
+__22         }__
+__23     },__
+__24     // fooF使用一个自定义的验证器__
+__25     fooF: {__
+__26         validator: function(value){__
+__27             return value>=0 && value<=100;__
+__28         }__
+__29     }__
+__30 }__
+
+
+

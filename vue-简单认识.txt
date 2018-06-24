@@ -1,0 +1,32 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2018-06-14T13:00:48+08:00
+
+====== vue-简单认识 ======
+创建日期 星期四 14 六月 2018
+
+{{./pasted_image.png}}
+
+Vue 程序结构
+
+Vue.js 是一个非常典型的 MVVM 的程序结构，整个程序从最上层大概分为
+
+全局设计：包括全局接口、默认选项等
+
+vm 实例设计：包括接口设计 (vm 原型)、实例初始化过程设计 (vm 构造函数)
+这里面大部分内容可以直接跟 Vue.js 的官方 API 参考文档对应起来，但文档里面没有且值得一提的是构造函数的设计，下面是我摘出的构造函数最核心的工作内容。
+
+{{./pasted_image001.png}}
+
+
+Vue 实例初始化
+
+整个实例初始化的过程中，重中之重就是把数据 (Model) 和视图 (View) 建立起关联关系。Vue.js 和诸多 MVVM 的思路是类似的，主要做了三件事：
+
+通过 observer 对 data 进行了监听，并且提供订阅某个数据项的变化的能力
+把 template 解析成一段 document fragment，然后解析其中的 directive(指令)，得到每一个 directive 所依赖的数据项及其更新方法。比如 v-text="message" 被解析之后 (这里仅作示意，实际程序逻辑会更严谨而复杂)：
+所依赖的数据项 this.$data.message，以及
+相应的视图更新方法 node.textContent = this.$data.message
+通过 watcher 把上述两部分结合起来，即把 directive 中的数据依赖订阅在对应数据的 observer 上，这样当数据变化的时候，就会触发 observer，进而触发相关依赖对应的视图更新方法，最后达到模板原本的关联效果。
+所以整个 vm 的核心，就是如何实现 observer, directive (parser(解析器)), watcher 这三样东西
+

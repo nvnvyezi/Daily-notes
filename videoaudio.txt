@@ -1,0 +1,21 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2018-06-09T12:12:57+08:00
+
+====== videoaudio ======
+创建日期 星期六 09 六月 2018
+
+
+=== MediaDevices.enumerateDevices() ===
+获取有关系统中可用的媒体输入和输出设备的一系列信息。
+
+=== MediaDevices.getUserMedia() ===
+在用户通过提示允许的情况下，打开系统上的相机或屏幕共享和/或麦克风，并提供 MediaStream 包含视频轨道和/或音频轨道的输入。
+
+MediaDevices.getUserMedia() 会提示用户给予使用媒体输入的许可，媒体输入会产生一个MediaStream，里面包含了请求的媒体类型的轨道。此流可以包含一个视频轨道（来自硬件或者虚拟视频源，比如相机、视频采集设备和屏幕共享服务等等）、一个音频轨道（同样来自硬件或虚拟音频源，比如麦克风、A/D转换器等等），也可能是其它轨道类型。
+
+它返回一个Promise对象，成功后会resolve回调一个MediaStream对象。若用户拒绝了使用权限，或者需要的媒体源不可用，promise会reject回调一个   PermissionDeniedError 或者  NotFoundError 。
+
+作为一个MediaStreamConstraints对象，指定了请求的媒体类型和相对应的参数。
+
+constraints参数是一个包含了video和audio两个成员的MediaStreamConstraints  对象，用于说明请求的媒体类型。必须至少一个类型或者两个同时可以被指定。如果浏览器无法找到指定的媒体类型或者无法满足相对应的参数要求，那么返回的Promise对象就会处于rejected［失败］状态，NotFoundError作为rejected［失败］回调的参数。 
