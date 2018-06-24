@@ -4,7 +4,11 @@ name=文档
 interwiki=
 home=Home
 icon=
+<<<<<<< HEAD
 document_root=/media/nvnvyezi/linux_software/linux-web/web-note
+=======
+document_root=
+>>>>>>> 53dcbdaaf1a3d16f33c5f66675b6a438243cb4cb
 shared=True
 endofline=unix
 disable_trash=False
