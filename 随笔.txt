@@ -64,7 +64,49 @@ __28         }__
 __29     }__
 __30 }__
 
-1
 
-
-
+private class SaveButtonActionListener implements ActionListener{
+	public void actionPerformed(ActionEvent e) ({
+		String title = titleTextField.getText();	//获得日志标题
+		String date = dateTextField.getText();		//获得日志日期
+		String name = title + "(" + date + ").txt";	//组织文本文件名称
+		File file = new File(urlStr + name);		//创建文本文件对象
+		if(!file.exists()) {				//判断文件是否存在
+			try{
+				file.createNewFile();			//如果不存在则创建文件
+			} catch (IOException el) {
+				el.printStackTrace();
+			}
+		}		
+		try{
+			FileWriter fileWriter = new FileWriter(file);	//创建字符输出流
+			fileWriter.writer(textArea.getText());		//将内容写入文本文件
+			fileWriter.close();				//关闭字符输出流
+		} catch (IOException el) {
+			el.printStackTrace();
+		}
+	}
+}
+private class SeeButtonActionListener implements ActionListener {
+	public void actionPerformed(ActionEvent e) {
+		ListDialog listFrame = new ListDialog();
+		listFrame.setVisible(true);		//显示日志列表窗体
+		File text = listFrame.getText();	//日志对象
+		listFrame.dispose();			//销毁日志列表窗体
+		if(text != null) {			//查看日志对象是否为空
+			String[] infos = text.getName().split("(|)");//分割日志文件的名称
+			titleTextField.setText(infos[0]);	//设置日志标题
+			dateTextField.setText(infos[1]);	//设置日志日期
+			try {
+				FileReader fileReader = new FileReader(text);	//创建字符输入流
+				char[] cbuf = new char[(int).text.length()];	//创建字符型数组
+				fileReader.read(cbuf);				//读入文件内容到字符型数组
+				textArea.setText(String.valueOf(cbuf));		//设置日志内容
+			} catch (FileNotFoundException el) {
+				el.printStackTrace();
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+}
