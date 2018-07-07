@@ -65,48 +65,20 @@ __29     }__
 __30 }__
 
 
-private class SaveButtonActionListener implements ActionListener{
-	public void actionPerformed(ActionEvent e) ({
-		String title = titleTextField.getText();	//获得日志标题
-		String date = dateTextField.getText();		//获得日志日期
-		String name = title + "(" + date + ").txt";	//组织文本文件名称
-		File file = new File(urlStr + name);		//创建文本文件对象
-		if(!file.exists()) {				//判断文件是否存在
-			try{
-				file.createNewFile();			//如果不存在则创建文件
-			} catch (IOException el) {
-				el.printStackTrace();
-			}
-		}		
-		try{
-			FileWriter fileWriter = new FileWriter(file);	//创建字符输出流
-			fileWriter.writer(textArea.getText());		//将内容写入文本文件
-			fileWriter.close();				//关闭字符输出流
-		} catch (IOException el) {
-			el.printStackTrace();
-		}
-	}
-}
-private class SeeButtonActionListener implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-		ListDialog listFrame = new ListDialog();
-		listFrame.setVisible(true);		//显示日志列表窗体
-		File text = listFrame.getText();	//日志对象
-		listFrame.dispose();			//销毁日志列表窗体
-		if(text != null) {			//查看日志对象是否为空
-			String[] infos = text.getName().split("(|)");//分割日志文件的名称
-			titleTextField.setText(infos[0]);	//设置日志标题
-			dateTextField.setText(infos[1]);	//设置日志日期
-			try {
-				FileReader fileReader = new FileReader(text);	//创建字符输入流
-				char[] cbuf = new char[(int).text.length()];	//创建字符型数组
-				fileReader.read(cbuf);				//读入文件内容到字符型数组
-				textArea.setText(String.valueOf(cbuf));		//设置日志内容
-			} catch (FileNotFoundException el) {
-				el.printStackTrace();
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-		}
-	}
-}
+包相关命令：
+
+清除无用包：apt-get clean && apt-get autoclean 　　#一般用apt-get autoclean就够了
+
+更新源：apt-get update　　　　#同步 /etc/apt/sources.list 源的索引，这样才知道是不是有最新的包
+
+更新包：apt-get upgrade　　　#更新所有已安装的软件（upgrade只是简单的更新包，不管这些依赖，它不添不删。）
+
+更新包2：apt-get dist-upgrade　#包与包之间存在各种依赖关系。而dist-upgrade可以根据依赖关系的变化添删包。（依赖有时会出错，建议新手谨慎使用）
+
+补充：在执行 upgrade or dist-upgrade 之前一定要执行 update, 这样才能获取最新
+
+安装软件：apt-get install XXX [--reinstall]　#--reinstall 是重新安装包，一般都是用 apt-get install XXX
+
+修复依赖：apt-get -f install　　　　　　　#修复依赖，类似于win里面的缺少dll，-f之后他帮你修复安装一些依赖（安装搜狗拼音实例有用到）
+
+删除软件：apt-get remove XXX [--purge]　#--purge 卸载的时候把配置文件也删了，完全删除包可以用这个选项：apt-get remove XXX --purge
