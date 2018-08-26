@@ -2,6 +2,8 @@
 
 [参考二](https://juejin.im/entry/5a5c559c518825734859ee5e)
 
+[参考三](https://juejin.im/post/5af5693451882530646527d1)
+
 **WebSocket**是一种在单个TCP连接上进行全双工通讯的协议。 
 
 ok，既然是双向通信，我相信你们一定玩过轮询，好吧，没玩过的看下面：
@@ -78,6 +80,49 @@ WebSocket一种在单个 TCP 连接上进行全双工通讯的协议。WebSocket
  首先Websocket是基于HTTP协议的，或者说**借用**了HTTP的协议来完成一部分握手。 在握手阶段是一样的
 
 ### **如何连接**
+
+ok,我们先看看api
+
+```
+// 创建一个socket实例：
+const socket = new WebSocket(ws://localhost:9093')
+// 打开socket
+socket.onopen = (event) => {
+    // 发送一个初始化消息
+  	socket.send('Hello Server!')
+  	 // 服务器有响应数据触发
+    socket.onmessage = (event) => { 
+        console.log('Client received a message',event)
+    }
+    // 出错时触发，并且会关闭连接。这时可以根据错误信息进行按需处理
+    socket.onerror = (event) => {
+  	    console.log('error')
+    }
+    // 监听Socket的关闭
+    socket.onclose = (event) => { 
+        console.log('Client notified socket has closed',event)
+    }
+    // 关闭Socket
+    socket.close(1000, 'closing normally') 
+ }
+```
+
+
+
+- 在创建socket实例的时候，new WebSocket()接受两个参数，第一个参数是ws或wss,第二个参数可以选填自定义协议，如果是多协议，可以是数组的方式。
+- WebSocket中的send方法不是任何数据都能发送的，现在只能发送三类数据，包括UTF-8的string类型（会默认转化为USVString），ArrayBuffer和Blob，且只有在建立连接后才能使用。（感谢大佬指出错误，已修改）
+- 在使用socket.close(code,[reason])关闭连接时，code和reason都是选填的。code是一个数字值表示关闭连接的状态号，表示连接被关闭的原因。如果这个参数没有被指定，默认的取值是1000 （表示正常连接关闭）,而reason是一个可读的字符串，表示连接被关闭的原因。这个字符串必须是不长于123字节的UTF-8 文本。
+
+ **.ws和wss**
+
+我们在上面提到过，创建一个socket实例时可以选填ws和wss来进行通信协议的确定。他们两个其实很像HTTP和HTTPS之间的关系。其中ws表示纯文本通信，而wss表示使用加密信道通信（TCP+TLS）。那为啥不直接使用HTTP而要自定义通信协议呢？这就要从WebSocket的目的说起来，WebSocket的主要功能就是为了给浏览器中的应用与服务器端提供优化的，双向的通信机制，但这不代表WebScoket只能局限于此，它当然还能够用于其他的场景，这就需要他可以通过非HTTP协议来进行数据交换，因此WebSocket也就采用了自定义URI模式，以确保就算没有HTTP，也能进行数据交换。
+
+ws和wss：
+
+- **ws协议**：普通请求，占用与HTTP相同的80端口
+- **wss协议**：基于SSL的安全传输，占用与TLS相同的443端口。
+
+注：有些HTTP中间设备有时候可能会不理解WebSocket，而导致各种诸如：盲目连接升级，乱修改内容等问题。而WSS就很好的解决了这个问题，它建立了一台哦端到端的安全通道，这个通道对中间设备模糊了数据，因此中间设备就不能感知到数据，也就无法对请求做一些特殊处理了。
 
 **客户端**
 
