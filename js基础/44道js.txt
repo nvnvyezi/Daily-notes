@@ -10,23 +10,29 @@ Creation-Date: 2018-06-15T13:49:56+08:00
 链接：https://juejin.im/post/5b1f899fe51d4506c60e46ee
 
 ===== 1. ["1", "2", "3"].map(parseInt) =====
-{{./pasted_image.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image.png)
 
 parseInt (val, radix) ：两个参数，val值，radix基数（就是多少进制转换）
 	 map 能传进回调函数 3参数 (element, index, array)
-{{./pasted_image002.png}}
-{{./pasted_image001.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image002.png)
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image001.png)
 
 __parseInt('1', 0);  //0代表10进制__
 __     parseInt('2', 1);  //没有1进制，不合法__
 __     parseInt('3', 2);  //2进制根本不会有3__
 
-
 {{./pasted_image003.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image003.png)
 
 ===== 2.[typeof null, null instanceof Object] =====
 
 {{./pasted_image004.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image004.png)
 
 答案：["object", false]
 解析：null代表空对象指针，所以typeof判断成一个对象。可以说JS设计上的一个BUG
@@ -40,6 +46,8 @@ instanceof运算符用来判断一个构造函数的prototype属性所指向的�
 
 {{./pasted_image006.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image006.png)
+
 如果一个函数不传初始值，数组第一个组默认为初始值.
 		 [3,2,1].reduce(Math.pow)
 		 Math.pow(3,2) //9
@@ -52,14 +60,20 @@ reduce() 可以作为一个高阶函数，用于函数的 compose。
 
 {{./pasted_image005.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image005.png)
+
 [].reduce(Math.pow)       //空数组会报TypeError
 	 [1].reduce(Math.pow)      //只有初始值就不会执行回调函数，直接返回1
 	 [].reduce(Math.pow,1)     //只有初始值就不会执行回调函数，直接返回1
 	 [2].reduce(Math.pow,3)    //传入初始值，执行回调函数，返回9
 {{./pasted_image007.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image007.png)
+
 ===== 4. =====
 {{./pasted_image008.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image008.png)
 
 字符串连接比三元运算有更高的优先级 
 	 所以原题等价于 'Value is true' ? 'Somthing' : 'Nonthing' 
@@ -68,11 +82,14 @@ reduce() 可以作为一个高阶函数，用于函数的 compose。
 ===== 5. =====
 {{./pasted_image009.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image009.png)
+
 （1）typeof时 name变量提升。 在函数内部之声明未定义
 	 （2）typeof优先级高于===
 
 {{./pasted_image010.png}}
-Hello World 因为name已经变成函数内局部变量
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image010.png)Hello World 因为name已经变成函数内局部变量
 
 ===== 6. =====
 var END = Math.pow(2, 53);
@@ -87,7 +104,8 @@ console.log(count);
 
 ===== 7. =====
 {{./pasted_image012.png}}
-filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image012.png)filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
 
 注意： filter() 不会对空数组进行检测。
 
@@ -96,22 +114,32 @@ filter() 方法创建一个新的数组，新数组中的元素是通过检查�
 
 {{./pasted_image013.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image011.png)
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image013.png)
+
 ===== 8. =====
 {{./pasted_image014.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image014.png)
 
 IEEE 754标准中的浮点数并不能精确地表达小数
 
 ===== 9. =====
 {{./pasted_image015.png}}
-switch判断的是全等（===），new String(x)是个对象
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image015.png)switch判断的是全等（===），new String(x)是个对象
 
 {{./pasted_image016.png}}
-// String.prototype 实例的原型指向构造函数的原型对象
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image016.png)// String.prototype 实例的原型指向构造函数的原型对象
 
 ===== 10 =====
 {{./pasted_image017.png}}
 
-{{./pasted_image018.png}}
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image017.png)
+
+{{./pasted_image018.png}}![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image018.png)
 
 
 a2是基本类型的值，逻辑上不应该有原型和方法。为了便于操作，有一种特殊的引用类型（基本包装类型）String。其实读取时，后台会自动完成下面的操作：
@@ -126,7 +154,7 @@ a2是基本类型的值，逻辑上不应该有原型和方法。为了便于操
 ===== 11 =====
 {{./pasted_image019.png}}
 
-%如果不是数值会调用Number（）去转化
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image019.png)%如果不是数值会调用Number（）去转化
 	 '13' % 2       // 1
 	  Infinity % 2  //NaN  Infinity 是无穷大
 	  -9 % 2        // -1
@@ -137,11 +165,15 @@ Array.isArray() 用于确定传递的值是否是一个 Array。
 
 {{./pasted_image020.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image020.png)
+
 Array.prototype是一个数组
 	 数组的原型是数组，对象的原型是对象，函数的原型是函数
 
 ===== 14 =====
 {{./pasted_image021.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image021.png)
 
 [0]的boolean值是true
 巩固：a[0] 的boolean是 false
@@ -150,21 +182,26 @@ Array.prototype是一个数组
 
 {{./pasted_image022.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image022.png)
+
 两个引用类型， ==比较的是引用地址
 巩固：[]== ![] 
 	 (1)! 的优先级高于== ，右边运算结果等于 false
 	 (2)一个引用类型和一个值去比较 把引用类型转化成值类型，左边0
 	 (3)所以 0 == false  答案是true
 
-
 ===== 16 =====
 {{./pasted_image023.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image023.png)
 
 加号有拼接功能，减号就是逻辑运算
 巩固：typeof (+"1")   // "number" 对非数值+—常被用来做类型转换相当于Number()
 
 ===== 17 =====
 {{./pasted_image024.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image024.png)
 
 +-又是一元加和减操作符号，就是数学里的正负号。负负得正哈。 
 巩固： 一元运算符还有一个常用的用法就是将自执行函数的function从函数声明变成表达式。
@@ -177,11 +214,15 @@ Array.prototype是一个数组
 ===== 18 =====
 {{./pasted_image025.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image025.png)
+
 如果没有值，map会跳过不会执行回调函数
 
 ===== 19 =====
 
 {{./pasted_image026.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image026.png)
 
 arguments会和函数参数绑定。
 巩固：但如果es6付给初始值则无法修改
@@ -196,11 +237,13 @@ arguments会和函数参数绑定。
 	   bar(1,1,1)
 	   //12
 {{./pasted_image027.png}}
-应该是参数是一个作用域, 括号里面又是一个
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image027.png)应该是参数是一个作用域, 括号里面又是一个
 
 ===== 20 =====
 {{./pasted_image028.png}}
-在JavaScript中number类型在JavaScript中以64位（8byte）来存储。这64位中有符号位1位、指数位11位、实数位52位。2的53次方时，是最大值。其值为：9007199254740992（0x20000000000000）。超过这个值的话，运算的结果就会不对.
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image028.png)在JavaScript中number类型在JavaScript中以64位（8byte）来存储。这64位中有符号位1位、指数位11位、实数位52位。2的53次方时，是最大值。其值为：9007199254740992（0x20000000000000）。超过这个值的话，运算的结果就会不对.
 
 ===== 21. reverse =====
 
@@ -245,6 +288,8 @@ __3...toString()__
 ===== 26 =====
 {{./pasted_image029.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image029.png)
+
 y 被赋值成全局变量，等价于
 	 y = 1 ;
 	 var x = y;
@@ -274,6 +319,8 @@ false, false, false, true
 
 ===== 29 =====
 {{./pasted_image030.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image031.png)
 
 Object 的实例是 a，a上并没有prototype属性
 	 a的__poroto__ 指向的是Object.prototype，也就是Object.getPrototypeOf(a)。a的原型对象是b
@@ -315,7 +362,8 @@ __typeof eval(f.name) // ?__
 __typeof eval(parent.name) //  ?__  
 
 {{./pasted_image031.png}}
-解析：f的函数名就是f
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image031.png)解析：f的函数名就是f
 	 parent是f原型对象的名字为"" ,
 	 先计算eval(f.name) 为 f,f的数据类型是function
 	 eval(parent.name) 为undefined, "undefined"
@@ -328,10 +376,10 @@ __lowerCaseOnly.test(null), lowerCaseOnly.test()]__
 
 ：这里 test 函数会将参数转为字符串. 'nul', 'undefined' 自然都是全小写了
 
-
 ===== 35.[,,,].join(",") =====
 {{./pasted_image032.png}}
-join() 方法用于把数组中的所有元素放入一个字符串。
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image032.png)join() 方法用于把数组中的所有元素放入一个字符串。
 
 元素是通过指定的分隔符进行分隔的。
 返回一个字符串。该字符串是通过把 arrayObject 的每个元素转换为字符串，然后把这些字符串连接起来，在两个元素之间插入 separator 字符串而生成的。
@@ -340,20 +388,27 @@ join() 方法用于把数组中的所有元素放入一个字符串。
 	 所以这个数组长度是3，
 巩固： [,,1,].join(".").length //  3 {{./pasted_image033.png}}
 
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image033.png)
+
 ===== 36 =====
 {{./pasted_image034.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image034.png)
 
 这取决于浏览器。类是一个保留字，但是它被Chrome、Firefox和Opera接受为属性名。在另一方面，每个人都会接受大多数其他保留词（int，私有，抛出等）作为变量名，而类是VordBoint。
 
 ===== 37.var a = new Date("epoch") =====
 {{./pasted_image035.png}}
-您得到“无效日期”，这是一个实际的日期对象（一个日期的日期为true）。但无效。这是因为时间内部保持为一个数字，在这种情况下，它是NA。
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image035.png)您得到“无效日期”，这是一个实际的日期对象（一个日期的日期为true）。但无效。这是因为时间内部保持为一个数字，在这种情况下，它是NA。
 	  在chrome上是undefined 
 	  正确的是格式是var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
 
 ===== 38 =====
 
 {{./pasted_image036.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image036.png)
 
 false
 解析：首先new在函数带（）时运算优先级和.一样所以从左向右执行
@@ -366,7 +421,8 @@ false
 
 ===== 39 =====
 {{./pasted_image037.png}}
-__var a = Date(0);__
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image037.png)__var a = Date(0);__
 __var b = new Date(0);__
 __var c = new Date();__
 __[a === b, b === c, a === c]__
@@ -382,6 +438,8 @@ c也是对象   a === c // 数据类型都不同，肯定是false
 	   "Tue Jun 12 2018 14:36:24 GMT+0800 (CST)" 当然如果a,b执行时间相差1秒则为false
 
 {{./pasted_image038.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image038.png)
 
 
 ===== 40. =====
@@ -407,6 +465,8 @@ __    a3 = captureOne(numRe,  "NUM=2"),__
 __    a4 = captureOne(wordRe,  "WORD=2");__
 __[a1 === a2, a3 === a4]__
 {{./pasted_image039.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image039.png)
 
 [true, false]
 解析： ／g有一个属性叫lastIndex，每次匹配如果没有匹配到，它将重置为0，如果匹配到了，他将记录匹配的位置。我们看一个简单的例子吧。
@@ -471,4 +531,6 @@ match() 方法将检索字符串 stringObject，以找到一个或多个与 rege
 	  //'a gif file' 同样的道理
 
 {{./pasted_image040.png}}
+
+![](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/pasted_image040.png)
 
