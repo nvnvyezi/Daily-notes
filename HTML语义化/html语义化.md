@@ -100,3 +100,10 @@ HTML5节元素标签包括body article nav aside section header footer hgroup �
 •address代表区块容器，必须是作为联系信息出现，邮编地址、邮件地址等等,一般出现在footer。[demo ](https://link.jianshu.com?t=http://www.runoob.com/tags/tag-address.html)
 
 •h1-h6因为hgroup，section和article的出现，h1-h6定义也发生了变化，允许一张页面出现多个h1。
+
+引一个链接
+
+[有用的HTML5标签]: https://segmentfault.com/a/1190000008051250
+
+
+

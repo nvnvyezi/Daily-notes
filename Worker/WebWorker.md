@@ -1,6 +1,4 @@
-Content-Type: text/x-zim-wiki
-Wiki-Format: zim 0.4
-Creation-Date: 2018-06-11T11:02:44+08:00
+实例:https://github.com/nvnvyezi/js-demo
 
 ====== WebWorker(工作线程) ======
 创建日期 星期一 11 六月 2018
@@ -102,77 +100,112 @@ Creation-Date: 2018-06-11T11:02:44+08:00
 	__['data-one', 'data-two', 'data-three','data-four']});__
 	
 	＞ 第一个我们使用 onmessage 事件处理器来接收消息，第二个使用 postMessage 来发送普通文本数据，第三个使用 postMessage 来发送结构化的数据，这里我们使用了 JSON 数据格式。
-	
+
 
 
 * **使用**
 
-	- 专用线程
-	
-	**index.html** 
-	
-	__<!DOCTYPE html>__
-	__<html lang="en">__
-	__<head>__
-	__    <meta charset="UTF-8">__
-	__    <title>webWorker</title>__
-	__</head>__
-	__<body>__
-	__    <script>__
-	__        var worker = new Worker("worker.js");__
-	__        worker.postMessage("123456");__
-	
-	__        worker.onmessage = function (e) {__
-	__            console.log(e.data)__
-	__        };__
-	__    </script>__
-	__</body>__
-	__</html>__
-	
-	**worker.js**
-	
-	__onmessage = function (e) {__
-	__    console.log(e.data);__
-	__    postMessage("2222")__
-	__};__
-	
-	**结束worker**
-	
-	__worker.terminate();__
-	{{./pasted_image.png}}
-	
-	
-	-共享线程
-	
-	> 对于 Web Worker ，一个 tab 页面只能对应一个 Worker 线程，是相互独立的；
-	而 SharedWorker 提供了能力能够让不同标签中页面共享的同一个 Worker 脚本线程；
-	当然，有个很重要的限制就是它们需要满足同源策略，也就是需要在同域下；
-	在页面（可以多个）中实例化 Worker 线程：
-	
-	__// main.js__
-	
-	__var myWorker = new SharedWorker("worker.js");__
-	
-	__myWorker.port.start();__
-	
-	__myWorker.port.postMessage("hello, I'm main");__
-	
-	__myWorker.port.onmessage = function(e) {__
-	__  console.log('Message received from worker');__
-	__}__
-	
-	__// worker.js__
-	__onconnect = function(e) {__
-	__  var port = e.ports[0];__
-	
-	__  port.addEventListener('message', function(e) {__
-	__    var workerResult = 'Result: ' + (e.data[0]);__
-	__    port.postMessage(workerResult);__
-	__  });__
-	__  port.start();__
-	__}__
-	
-	
+  - 专用线程
+
+  **index.html** 
+
+  __<!DOCTYPE html>__
+  __<html lang="en">__
+  __<head>__
+  __    <meta charset="UTF-8">__
+  __    <title>webWorker</title>__
+  __</head>__
+  __<body>__
+  __    <script>__
+  __        var worker = new Worker("worker.js");__
+  __        worker.postMessage("123456");__
+
+  __        worker.onmessage = function (e) {__
+  __            console.log(e.data)__
+  __        };__
+  __    </script>__
+  __</body>__
+  __</html>__
+
+  **worker.js**
+
+  __onmessage = function (e) {__
+  __    console.log(e.data);__
+  __    postMessage("2222")__
+  __};__
+
+  **结束worker**
+
+  __worker.terminate();__
+  {{./pasted_image.png}}
+
+
+  -共享线程
+
+  > 对于 Web Worker ，一个 tab 页面只能对应一个 Worker 线程，是相互独立的；
+  而 SharedWorker 提供了能力能够让不同标签中页面共享的同一个 Worker 脚本线程；
+  当然，有个很重要的限制就是它们需要满足同源策略，也就是需要在同域下；
+  在页面（可以多个）中实例化 Worker 线程：
+
+  __// main.js__
+
+  __var myWorker = new SharedWorker("worker.js");__
+
+  __myWorker.port.start();__
+
+  __myWorker.port.postMessage("hello, I'm main");__
+
+  __myWorker.port.onmessage = function(e) {__
+  __  console.log('Message received from worker');__
+  __}__
+
+  __// worker.js__
+  __onconnect = function(e) {__
+  __  var port = e.ports[0];__
+
+  __  port.addEventListener('message', function(e) {__
+  __    var workerResult = 'Result: ' + (e.data[0]);__
+  __    port.postMessage(workerResult);__
+  __  });__
+  __  port.start();__
+  __}__
+
+
+
+### Worker上下文
+
+Worker执行的上下文，与主页面执行时的上下文并不相同，最顶层的对象并不是window，而是个一个叫做WorkerGlobalScope的东东，所以无法访问window、以及与window相关的DOM API，但是可以与setTimeout、setInterval等协作。
+
+WorkerGlobalScope作用域下的常用属性、方法如下：
+
+1、self
+
+我们可以使用 WorkerGlobalScope 的 self 属性来或者这个对象本身的引用
+
+2、location
+
+　　location 属性返回当线程被创建出来的时候与之关联的 WorkerLocation 对象，它表示用于初始化这个工作线程的脚步资源的绝对 URL，即使页面被多次重定向后，这个 URL 资源位置也不会改变。
+
+3、close
+
+　　关闭当前线程
+
+4、importScripts
+
+　　我们可以通过importScripts()方法通过url在worker中加载库函数
+
+5、XMLHttpRequest
+
+　　有了它，才能发出Ajax请求
+
+6、setTimeout/setInterval以及addEventListener/postMessage
+
+### 终止 terminate()
+
+在主页面上调用terminate()方法，可以立即杀死 worker 线程，不会留下任何机会让它完成自己的操作或清理工作。另外，Worker也可以调用自己的 close() 方法来关闭自己
+
+
+
 === 工作线程事件处理模型 ===
 
 当工作线程被一个具有 URL 参数的构造函数创建的时候，它需要有一系列的处理流程来处理和记录它本身的数据和状态。下面我们给出了工作线程的处理模型如下（注：由于 W3C 中工作线程的规范依然在更新，您读到这篇文章的时候可能看到已不是最新的处理模型，建议参考 W3C 中的最新规范）：
@@ -222,7 +255,7 @@ Creation-Date: 2018-06-11T11:02:44+08:00
 __interface WorkerGlobalScope { __
 __ readonly attribute WorkerGlobalScope self; __
 __ readonly attribute WorkerLocation location; __
- 
+
 __ void close(); __
 __          attribute Function onerror; __
 __};__ 
@@ -252,7 +285,6 @@ __WorkerGlobalScope implements EventTarget;__
 	* 当一个工作线程的文档对象列表中的任何一个对象都是处于完全活动状态的时候，这个工作线程会被称之为需要激活线程。（A worker is said to be an active needed worker if any of the Document objects in the worker's Documents are fully active.）
 	* 当一个工作线程是一个非需要激活线程同时又是一个许可线程的时候，这个工作线程会被称之为挂起线程。（A worker is said to be a suspendable worker if it is not an active needed worker but it is a permissible worker.）
 
-
 === 工作线程Api 接口 ===
 
 **类库和脚本的访问和引入**
@@ -264,7 +296,7 @@ __WorkerGlobalScope implements EventTarget;__
 	3. 如果有任何失败或者错误，抛出 SYNTAX_ERR 异常。
 	4. 尝试从用户提供的 URL 资源位置处获取脚本资源。
 	5. 对于 importScripts 方法的每一个参数，按照用户的提供顺序，获取脚本资源后继续进行其它操作。
-
+	
 	**最小公倍数和最大公约数**
 	__/** __
 	__ * 使用 importScripts 方法引入外部资源脚本，在这里我们使用了数学公式计算工具库 math_utilities.js __
@@ -284,20 +316,21 @@ __WorkerGlobalScope implements EventTarget;__
 	__ var second=event.data.second; __
 	__ calculate(first,second); __
 	__ }; __
-	 
-	 
-	__ /* __
-	__ * calculate the least common multiple __
-	__ * and the greatest common divisor __
-	__ */ __
-	__ function calculate(first,second) { __
-	__    //do the calculation work __
-	__ var common_divisor=divisor(first,second); __
-	__ var common_multiple=multiple(first,second); __
-	__    postMessage("Work done! " + __
-	__"The least common multiple is "+common_divisor __
-	__ +" and the greatest common divisor is "+common_multiple); __
-	__ }__
+
+
+​	 
+​	__ /* __
+​	__ * calculate the least common multiple __
+​	__ * and the greatest common divisor __
+​	__ */ __
+​	__ function calculate(first,second) { __
+​	__    //do the calculation work __
+​	__ var common_divisor=divisor(first,second); __
+​	__ var common_multiple=multiple(first,second); __
+​	__    postMessage("Work done! " + __
+​	__"The least common multiple is "+common_divisor __
+​	__ +" and the greatest common divisor is "+common_multiple); __
+​	__ }__
 
 
 === 工作导航器对象（WorkerNavigator） ===

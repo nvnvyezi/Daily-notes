@@ -5,6 +5,8 @@ Creation-Date: 2018-06-12T22:13:36+08:00
 ====== 随笔 ======
 创建日期 星期二 12 六月 2018
 
+数字输入框，滑动输入条完后了　ｇｒｉｄ
+
 **IOS APP中，使用h5播放器，默认打开网页的时候，会自动全屏，解决方法webkit-playsinline**
 
 __<video src="1.mp4" webkit-playsinline playsinline x5-playsinline x-webkit-airplay="allow"></video>__  
@@ -117,4 +119,21 @@ __30 }__
 
  
 
- 
+​     **unar常用选项解释**
+
+-o
+
+> 解释：指定解压结果保存的位置 
+> `unar document.zip -o /home/dir/`
+
+-e
+
+> 解释：指定编码 
+> `unar -e GBK document.zip`
+
+-p
+
+> 解释：指定解压密码 
+> `unar -p 123456 document.zip`
+
+  ---------------------  本文来自 申鹏啊 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/Allan_Bst/article/details/79007010?utm_source=copy  

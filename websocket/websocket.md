@@ -8,8 +8,6 @@
 
 ok，既然是双向通信，我相信你们一定玩过轮询，好吧，没玩过的看下面：
 
-
-
 **轮询（polling）：客户端按规定时间定时像服务端发送ajax请求，服务器接到请求后马上返回响应信息并关闭连接。**
 
 那聪明的人就想到了我可以用定时器来固定时间向服务器获取数据，
@@ -113,7 +111,7 @@ socket.onopen = (event) => {
 - WebSocket中的send方法不是任何数据都能发送的，现在只能发送三类数据，包括UTF-8的string类型（会默认转化为USVString），ArrayBuffer和Blob，且只有在建立连接后才能使用。（感谢大佬指出错误，已修改）
 - 在使用socket.close(code,[reason])关闭连接时，code和reason都是选填的。code是一个数字值表示关闭连接的状态号，表示连接被关闭的原因。如果这个参数没有被指定，默认的取值是1000 （表示正常连接关闭）,而reason是一个可读的字符串，表示连接被关闭的原因。这个字符串必须是不长于123字节的UTF-8 文本。
 
- **.ws和wss**
+ **ws和wss**
 
 我们在上面提到过，创建一个socket实例时可以选填ws和wss来进行通信协议的确定。他们两个其实很像HTTP和HTTPS之间的关系。其中ws表示纯文本通信，而wss表示使用加密信道通信（TCP+TLS）。那为啥不直接使用HTTP而要自定义通信协议呢？这就要从WebSocket的目的说起来，WebSocket的主要功能就是为了给浏览器中的应用与服务器端提供优化的，双向的通信机制，但这不代表WebScoket只能局限于此，它当然还能够用于其他的场景，这就需要他可以通过非HTTP协议来进行数据交换，因此WebSocket也就采用了自定义URI模式，以确保就算没有HTTP，也能进行数据交换。
 
@@ -172,7 +170,6 @@ Sec-WebSocket-Accept根据客户端请求首部的Sec-WebSocket-Key计算出来�
 - 1）将Sec-WebSocket-Key跟258EAFA5-E914-47DA-95CA-C5AB0DC85B11拼接；
 - 2）通过SHA1计算出摘要，并转成base64字符串。
 
-  
 后面的，Sec-WebSocket-Protocol 则是表示最终使用的协议。
 
  前面提到了，Sec-WebSocket-Key/Sec-WebSocket-Accept在主要作用在于提供基础的防护，减少恶意连接、意外连接。
