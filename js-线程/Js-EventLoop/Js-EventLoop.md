@@ -1,10 +1,4 @@
-Content-Type: text/x-zim-wiki
-Wiki-Format: zim 0.4
-Creation-Date: 2018-06-10T14:22:31+08:00
-
-====== Js-EventLoop ======
-创建日期 星期日 10 六月 2018
-
+```js
 setTimeout(function() {  
   console.log(1)  
 }, 0);  
@@ -19,10 +13,10 @@ new Promise(function executor(resolve) {
 });  
 console.log(5);  
 
-**> 2,3,5,4,1**
+//2,3,5,4,1
+```
 
-
-{{./pasted_image.png}}
+![](./pasted_image.png)
 
 > 运行以后的程序叫做"进程"（process），一般情况下，一个进程一次只能执行一个任务。
 
@@ -31,26 +25,29 @@ console.log(5);
 **（２）新建进程：　**使用ｆｏｒｋ命令，　为每个任务新建一个进程
 **（３）新建线程：　**因为进程太耗费资源，所以如今的程序往往允许一个进程包含多个线程，由线程去完成任务．
 
-＞　ｊｓ（单线程）采用第一种方式．
+###**js(单线程)采用第一种方式．**
 
 **如果某个任务很耗时，比如涉及很多I/O（输入/输出）操作，那么线程的运行大概是下面的样子。**
-{{./pasted_image001.png}}
 
-＞　由于I/O操作很慢，所以这个线程的大部分运行时间都在空等I/O操作的返回结果。这种运行方式称为"同步模式"（synchronous I/O）或"堵塞模式"（blocking I/O）。
+![](./pasted_image001.png)
+
+> 由于I/O操作很慢，所以这个线程的大部分运行时间都在空等I/O操作的返回结果。这种运行方式称为"同步模式"（synchronous I/O）或"堵塞模式"（blocking I/O）。
+>
 
 **如果采用多线程，同时运行多个任务，那很可能就是下面这样**
 
-{{./pasted_image002.png}}
+![](./pasted_image002.png)
 
-＞　上图表明，多线程不仅占用多倍的系统资源，也闲置多倍的资源，这显然不合理。
+> 上图表明，多线程不仅占用多倍的系统资源，也闲置多倍的资源，这显然不合理。
+>
 
-**引入ＥｖｅｎｔＬｏｏｐ**
+###**引入ＥｖｅｎｔＬｏｏｐ**
 
-＞　**ＥｖｅｎｔＬｏｏｐ是一个程序结构，用于等待和发送消息和事件**
+**ＥｖｅｎｔＬｏｏｐ是一个程序结构，用于等待和发送消息和事件**
 
-* 简单说，就是在程序中设置两个线程：一个负责程序本身的运行，称为"主线程"；另一个负责主线程与其他进程（主要是各种I/O操作）的通信，被称为"Event Loop线程"（可以译为"消息线程"）。
+> 简单说，就是在程序中设置两个线程：一个负责程序本身的运行，称为"主线程"；另一个负责主线程与其他进程（主要是各种I/O操作）的通信，被称为"Event Loop线程"（可以译为"消息线程"）。
 
-{{./pasted_image003.png}}
+![](./pasted_image003.png)
 
 > 上图主线程的绿色部分，还是表示运行时间，而橙色部分表示空闲时间。每当遇到I/O的时候，主线程就让Event Loop线程去通知相应的I/O程序，然后接着往后运行，所以不存在红色的等待时间。等到I/O程序完成操作，Event Loop线程再把结果返回主线程。主线程就调用事先设定的回调函数，完成整个任务。
 
@@ -58,14 +55,15 @@ console.log(5);
 
 > 这正是JavaScript语言的运行方式。单线程模型虽然对JavaScript构成了很大的限制，但也因此使它具备了其他语言不具备的优势。如果部署得好，JavaScript程序是不会出现堵塞的，这就是为什么node.js平台可以用很少的资源，应付大流量访问的原因。
 
-http://www.ruanyifeng.com/blog/2013/10/event_loop.html
+[阮一峰Event Loop](http://www.ruanyifeng.com/blog/2013/10/event_loop.html)
 
-**JavaAcript引擎**
+###**JavaAcript引擎**
 
-{{./pasted_image004.png}}
+![](./pasted_image004.png)
 
-
-＞　由于JavaScript引擎同一时间只执行一段代码（这是由JavaScript单线程的性质决定的），所以每个JS代码块阻塞了其它异步事件的进行。这意味着当一个异步事件（像鼠标点击、计时器、Ajax）发生时，这些事件的回调函数将排在队列后面等待执行（如何排队完全取决于各浏览器，而我们可以忽视它们内部差异，作一个简化处理）。 
+>
+> 由于JavaScript引擎同一时间只执行一段代码（这是由JavaScript单线程的性质决定的），所以每个JS代码块阻塞了其它异步事件的进行。这意味着当一个异步事件（像鼠标点击、计时器、Ajax）发生时，这些事件的回调函数将排在队列后面等待执行（如何排队完全取决于各浏览器，而我们可以忽视它们内部差异，作一个简化处理）。 
+>
 
 > 我们首先从第一个JS代码块开始，有两个计时器被初始化：一个10ms的setTimeout和一个10ms的setInterval.观察计时器初始化位置，（计时器初始化完毕后就会开始计时），发现setTimeout计时器的回调实际上会在第一个代码块执行完毕前被触发。但是这里注意的是，它不会立即执行（单线程不能这样做）。实际上，触发的回调将被排成一个队列，等待下一个可执行时间。
 
@@ -81,8 +79,7 @@ http://www.ruanyifeng.com/blog/2013/10/event_loop.html
 
 > 在浏览器中，JavaScript引擎是基于事件驱动的，这里的事件可看作是浏览器派给它的各种任务，这些任务可能源自当前执行的代码块，如调用setTimeout()，也可能来自浏览器内核，如onload()、onclick()、onmouseover()、setTimeOut()、setInterval()、Ajax等。如果从代码的角度来看，所谓的任务实体就是各种回调函数，由于“单线程”的原因，这些任务会进行排队，一个接着一个等待着被引擎处理
 
-**JavaScript引擎线程和其它侦听线程**
-{{./pasted_image005.png}}
+**JavaScript引擎线程和其它侦听线程**![](./pasted_image005.png)
 
 上图中，定时器和事件都按时触发了，这表明JavaScript引擎的线程和计时器触发线程、事件触发线程是三个单独的线程，即使JavaScript引擎的线程被阻塞，其它两个触发线程都在运行。
 
@@ -114,7 +111,7 @@ JavaScript语言的设计者意识到，这时主线程完全可以不管IO设�
 	（3）一旦"执行栈"中的所有同步任务执行完毕，系统就会读取"任务队列"，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。
 	
 	（4）主线程不断重复上面的第三步。
-	
+
 **事件和回调函数**
 
 "任务队列"是一个事件的队列（也可以理解成消息的队列），IO设备完成一项任务，就在"任务队列"中添加一个事件，表示相关的异步任务可以进入"执行栈"了。主线程读取"任务队列"，就是读取里面有哪些事件。
@@ -128,7 +125,8 @@ JavaScript语言的设计者意识到，这时主线程完全可以不管IO设�
 **EventLoop**
 
 主线程从"任务队列"中读取事件，这个过程是循环不断的，所以整个的这种运行机制又称为Event Loop（事件循环）。
-{{./pasted_image006.png}}
+
+![](./pasted_image006.png)
 
 
 上图中，主线程运行的时候，产生堆（heap）和栈（stack），栈中的代码调用各种外部API，它们在"任务队列"中加入各种事件（click，load，done）。只要栈中的代码执行完毕，主线程就会去读取"任务队列"，依次执行那些事件所对应的回调函数。
@@ -149,7 +147,7 @@ HTML5标准规定了setTimeout()的第二个参数的最小值（最短间隔）
 
 **node.js 的EventLoop**
 
-{{./pasted_image007.png}}
+![](./pasted_image007.png)
 
 
 由图知,Node.js的运行机制如下。
@@ -170,12 +168,12 @@ process.nextTick方法可以在当前"执行栈"的尾部----下一次Event Loop
 
 setImmediate(function (){
   setImmediate(function A() {
-	console.log(1);
-	setImmediate(function B(){console.log(2);});
+​	console.log(1);
+​	setImmediate(function B(){console.log(2);});
   });
 
   setTimeout(function timeout() {
-	console.log('TIMEOUT FIRED');
+​	console.log('TIMEOUT FIRED');
   }, 0);
 });
 // 1

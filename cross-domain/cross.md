@@ -8,16 +8,16 @@
 > - 域名相同
 > - 端口相同
 
-| URL                                                    | 说明                           | 是否允许通信                           |
-| ------------------------------------------------------ | ------------------------------ | -------------------------------------- |
-| http://www.a.com/a.js　　　　 http://www.a.com/b.js    | 同一域名下                     | 允许                                   |
-| http://www.a.com/lab/a.js http://www.a.com/script/b.js | 同一域名下不同文件夹           | 允许                                   |
-| http://www.a.com:8000/a.js 　　http://www.a.com/b.js   | 同一域名，不同端口             | 不允许                                 |
-| http://www.a.com/a.js　　　　 https://www.a.com/b.js   | 同一域名，不同协议             | 不允许                                 |
-| http://www.a.com/a.js 　　　　http://70.32.92.74/b.js  | 域名和域名对应ip               | 不允许                                 |
-| http://www.a.com/a.js　　　　 http://script.a.com/b.js | 主域相同，子域不同             | 不允许                                 |
-| http://www.a.com/a.js 　　　　http://a.com/b.js        | 同一域名，不同二级域名（同上） | 不允许（cookie这种情况下也不允许访问） |
-| http://www.cnblogs.com/a.js 　http://www.a.com/b.js    | 不同域名                       | 不允许                                 |
+| URL                                                          | 说明                           | 是否允许通信                           |
+| ------------------------------------------------------------ | ------------------------------ | -------------------------------------- |
+| http://www.a.com/a.js　　　　   http://www.a.com/b.js        | 同一域名下                     | 允许                                   |
+| http://www.a.com/lab/a.js             http://www.a.com/scri/b.js | 同一域名下不同文件夹           | 允许                                   |
+| http://www.a.com:8000/a.js 　　 http://www.a.com/b.js        | 同一域名，不同端口             | 不允许                                 |
+| http://www.a.com/a.js　　　　   https://www.a.com/b.js       | 同一域名，不同协议             | 不允许                                 |
+| http://www.a.com/a.js 　　　　  http://70.32.92.74/b.js      | 域名和域名对应ip               | 不允许                                 |
+| http://www.a.com/a.js　　　　   http://script.a.com/b.js     | 主域相同，子域不同             | 不允许                                 |
+| http://www.a.com/a.js 　　　　  http://a.com/b.js            | 同一域名，不同二级域名（同上） | 不允许（cookie这种情况下也不允许访问） |
+| http://www.cnblogs.com/a.js 　   http://www.a.com/b.js       | 不同域名                       | 不允许                                 |
 
 特别注意两点：
 
@@ -87,7 +87,7 @@ B网页就可以读到这个 Cookie。
 
 比如，父窗口运行下面的命令，如果`iframe`窗口不是同源，就会报错。
 
-> ```
+> ```js
 > document.getElementById("myIFrame").contentWindow.document
 > // Uncaught DOMException: Blocked a frame from accessing a cross-origin frame.
 > ```
@@ -96,7 +96,7 @@ B网页就可以读到这个 Cookie。
 
 反之亦然，子窗口获取主窗口的DOM也会报错。
 
-> ```
+> ```js
 > window.parent.document.body
 > // 报错
 > ```
@@ -117,7 +117,7 @@ B网页就可以读到这个 Cookie。
 
 父窗口可以把信息，写入子窗口的片段标识符。
 
-> ```
+> ```js
 > var src = originURL + '#' + data;
 > document.getElementById('myIFrame').src = src;
 > ```
@@ -126,7 +126,7 @@ B网页就可以读到这个 Cookie。
 
 当URL的片段标识符更改时，将触发**hashchange**事件 (跟在＃符号后面的URL部分，包括＃符号)
 
-```
+```js
 window.onhashchange = checkMessage;
 
 function checkMessage() {
@@ -137,7 +137,7 @@ function checkMessage() {
 
 同样的，子窗口也可以改变父窗口的片段标识符。
 
-> ```
+> ```js
 > parent.location.href= target + "#" + hash;
 > ```
 
@@ -155,7 +155,7 @@ function checkMessage() {
 
 先是a.com下的文件cs1.html文件：
 
-```
+```js
 function startRequest(){
     var ifr = document.createElement('iframe');
     ifr.style.display = 'none';
@@ -176,7 +176,7 @@ setInterval(checkHash, 2000);
 
 cnblogs.com域名下的cs2.html:
 
-```
+```js
 //模拟一个简单的参数处理操作
 switch(location.hash){
     case '#paramdo':
@@ -203,7 +203,7 @@ function callBack(){
 
 a.com下的域名cs3.html
 
-```
+```js
 //因为parent.parent和自身属于同一个域，所以可以改变其location.hash的值
 parent.parent.location.hash = self.location.hash.substring(1);
 ```
@@ -214,7 +214,7 @@ parent.parent.location.hash = self.location.hash.substring(1);
 
 name 属性可设置或返回存放窗口的名称的一个字符串。
 
-该名称是在 open() 方法创建窗口时指定的或者使用一个 <frame> 标记的 name 属性指定的。
+该名称是在 open() 方法创建窗口时指定的或者使用一个 <iframe> 标记的 name 属性指定的。
 
 窗口的名称可以用作一个 <a> 或者 <form> 标记的 target 属性的值。以这种方式使用 target 属性声明了超链接文档或表单提交结果应该显示于指定的窗口或框架中。
 
