@@ -1,4 +1,4 @@
-###**renderer**
+###renderer
 
 **Chrome包含了一个Browser进程和多个Renderer进程。**
 
