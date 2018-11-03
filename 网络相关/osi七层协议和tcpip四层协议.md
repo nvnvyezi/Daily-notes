@@ -1,5 +1,7 @@
 https://laravel-china.org/articles/5807/the-difference-between-seven-layer-model-and-four-layer-model
 
+https://blog.csdn.net/qq_18425655/article/details/52314970
+
 **发展历史**
 
 网络模型不是一开始就有的，在网络刚发展时，网络协议是由各互联网公司自己定义的，比如那时的巨头网络公司 IBM、微软、苹果、思科等等，他们每家公司都有自己的网络协议，各家的协议也是不能互通的，那时候大家觉得这是可以的，但对消费者来说这实际上是技术垄断，因为你买了苹果的设备就不能用微软的设备，因为他们的协议不是一样的，没有统一的标准来规范网络协议，都是这些公司的私有协议。
