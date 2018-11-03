@@ -164,7 +164,7 @@ if("666"){
 
 这里我觉得答出是 false就可以了，因为有下面这个公式要记忆
 
-![](/media/nvnvyezi/linux_software/linux-web/web-note/v2-965475269c7d2316048bd0af38cafe4e_hd.jpg)
+![](./v2-965475269c7d2316048bd0af38cafe4e_hd.jpg)
 
 > **9.什么样的处理可以使得下面的代码输出为true？**
 

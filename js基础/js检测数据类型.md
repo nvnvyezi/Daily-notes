@@ -71,11 +71,11 @@ Array.isArray() 本质上检测的是对象的 [[Class]] 值，[[Class]] 是对�
 
 当一个函数 F被定义时，JS引擎会为F添加 prototype 原型，然后再在 prototype上添加一个 constructor 属性，并让其指向 F 的引用。如下所示：
 
-![img](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/849589-20170508125250566-1896556617.png)
+![img](./849589-20170508125250566-1896556617.png)
 
 当执行 var f = new F() 时，F 被当成了构造函数，f 是F的实例对象，此时 F 原型上的 constructor 传递到了 f 上，因此 f.constructor == F
 
-![img](/media/nvnvyezi/linux_software/linux-web/web-note/js基础/849589-20170508125714941-1649387639.png)
+![img](./849589-20170508125714941-1649387639.png)
 
 可以看出，F 利用原型对象上的 constructor 引用了自身，当 F 作为构造函数来创建对象时，原型上的 constructor 就被遗传到了新创建的对象上， 从原型链角度讲，构造函数 F 就是新对象的类型。这样做的意义是，让新对象在诞生以后，就具有可追溯的数据类型。
 
