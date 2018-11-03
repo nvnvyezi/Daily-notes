@@ -103,7 +103,7 @@ console.log(test1.test2());
 
 
 
-## ｃｌａｓｓ表达式
+## class表达式
 
 
 
@@ -288,7 +288,7 @@ class Counter {
 
 
 
-## ｔｈｉｓ的指向
+## this的指向
 
 
 
@@ -364,7 +364,7 @@ function selfish (target) {
 const logger = selfish(new Logger());
 ```
 
-## name 属性 [§](http://es6.ruanyifeng.com/#docs/class#name-%E5%B1%9E%E6%80%A7) [⇧](http://es6.ruanyifeng.com/#docs/class)
+## name 属性
 
 由于本质上，ES6 的类只是 ES5 的构造函数的一层包装，所以函数的许多特性都被`Class`继承，包括`name`属性。
 
@@ -442,7 +442,7 @@ for (let x of new Foo('hello', 'world')) {
 
 上面代码中，`Foo`类的`Symbol.iterator`方法前有一个星号，表示该方法是一个 Generator 函数。`Symbol.iterator`方法返回一个`Foo`类的默认遍历器，`for...of`循环会自动调用这个遍历器。
 
-##  ｃｌａｓｓ静态方法
+##  class静态方法
 
 
 
@@ -637,7 +637,7 @@ let y = new Rec();
 // }
 ```
 
-## ｃｌａｓｓ继承　
+## class继承　
 
 
 
