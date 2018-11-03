@@ -1,4 +1,4 @@
-##女女复习日记
+## 女女复习日记
 
 ### HTML/HTML5
 
@@ -14,9 +14,7 @@
 
 
 
-
-
-###JS
+### JS
 
 [AJAX](https://github.com/nvnvyezi/Daily-notes/blob/master/ajax/ajax.md)
 
@@ -58,7 +56,7 @@
 
 
 
-###CSS/CSS3
+### CSS/CSS3
 
 [BFC](https://github.com/nvnvyezi/Daily-notes/blob/master/BFC-IFC/BFC.md)
 
@@ -106,7 +104,7 @@
 
 
 
-###其他
+### 其他
 
 [跨域](https://github.com/nvnvyezi/Daily-notes/blob/master/cross-domain/cross.md)
 
