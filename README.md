@@ -120,9 +120,13 @@
 
 [http发展史](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/http%E5%8F%91%E5%B1%95%E5%8F%B2.md)
 
+[https原理](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/https%E5%8E%9F%E7%90%86.md)
+
 [http状态码](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/http%E7%8A%B6%E6%80%81%E7%A0%81.md)
 
 [http缓存](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/http%E7%BC%93%E5%AD%98.md)
+
+[CDN](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/CDN.md)
 
 [osi七层协议和tcpip四层协议](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/osi%E4%B8%83%E5%B1%82%E5%8D%8F%E8%AE%AE%E5%92%8Ctcpip%E5%9B%9B%E5%B1%82%E5%8D%8F%E8%AE%AE.md)
 
