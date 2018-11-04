@@ -132,7 +132,13 @@
 
 [三次握手四次挥手](https://github.com/nvnvyezi/Daily-notes/blob/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.md)
 
-[TCP+UDP]()
+[TCP+UDP](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/TCP+UDP.md)
 
-[GET+POST]()
+[GET+POST](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/get+post.md)
+
+[socket+websocket](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/socket+websocket.md)
+
+[XSS](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/XSS.md)
+
+[CSRF](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/CSRF.md)
 
