@@ -142,3 +142,4 @@
 
 [CSRF](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/CSRF.md)
 
+[DOS+DDOS+DRDOS](https://github.com/nvnvyezi/Daily-notes/tree/master/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/DOS+DDOS.md)
