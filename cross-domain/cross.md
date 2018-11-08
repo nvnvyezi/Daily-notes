@@ -436,7 +436,7 @@ b.html(http://www.neal.cn/b.html)
 </script>
 ```
 
-#### ｌｏｃａｌｓｔｏｒａｇｅ
+#### localstorage
 
 通过`window.postMessage`，读写其他窗口的 LocalStorage 也成为了可能。
 
