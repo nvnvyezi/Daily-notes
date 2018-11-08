@@ -342,3 +342,42 @@ WebSocket模式客户端与服务器请求响应模式如下图：
 如果你还对WebSocket的数据帧格式感兴趣，[请猛戳](https://juejin.im/entry/5a5c559c518825734859ee5e)
 
 好的，本文到此结束，如果你对其他知识，或者不知道自己想了解什么，[请猛戳](https://github.com/nvnvyezi/Daily-notes)https://github.com/nvnvyezi/Daily-notes，里面有你想不到的啊哈哈
+
+[原文地址1](https://blog.csdn.net/dbs1215/article/details/48953589)
+
+**RSA原理**
+
+1. 随机选取两个比较大的质数p，q，且p!=q，计算N=p*q
+
+2. 根据欧拉函数（扎到小于N并且是质数的个数），求出r
+
+3. 找出一个小于r的整数e，求得e关于r的模反元素（）d，（模反元素存在，当且仅当e与r互质）
+
+   > 模逆元也称为**模倒数**，或者**模逆元**。
+   >
+   > 一[整数](https://zh.wikipedia.org/wiki/%E6%95%B4%E6%95%B0)a对[同余](https://zh.wikipedia.org/wiki/%E5%90%8C%E9%A4%98)n之**模逆元**是指满足以下公式的整数 b
+   >
+   > ![](/media/nvnvyezi/linux_software/linux-web/Daily-notes/网络相关/be54db4848231e9f72f61b746a27d6a0aeace369.svg)
+   >
+   > 也可以写成以下的式子
+   >
+   > ![](/media/nvnvyezi/linux_software/linux-web/Daily-notes/网络相关/297023f006cd9486fa4192b391dbc819dd8f89e1.svg)
+   >
+   > 整数 a 对模数 n 之模逆元存在的[充分必要条件](https://zh.wikipedia.org/wiki/%E5%85%85%E5%88%86%E5%BF%85%E8%A6%81%E6%A2%9D%E4%BB%B6)是 a 和 n [互素](https://zh.wikipedia.org/wiki/%E4%BA%92%E8%B3%AA)，若此模逆元存在，在模数 n 下的除法可以用和对应模逆元的乘法来达成，此概念和实数除法的概念相同。
+
+**例子**
+
+假设Alice和Bob又要相互通信，这次用的是非对称加密。
+
+1. Alice 随机取大质数P1=53，P2=59，那N=53*59=3127，φ ( n )=3016，取一个e=3，计算出d=2011。
+2. 只将n=3127，e=3 作为公钥传给Bob。
+3. 假设Bob需要加密的明文m=89，c = 89^3 mod 3127=1394，于是Bob传回c=1394
+4. Alice使用c^d mod n = 1394^2011 mod 3127，就能得到明文m=89。
+   回过头来看看，攻击者能截取到n=3127，e=3，c=1394，然而他仍然无法不通过d来进行密文解码
+
+**在巩固一遍**
+
+- 找两个比较大的质数p,q，求出N=p*q
+- 由欧拉函数找出r，也就是找出小于N的所有质数的和r，r=(p-1)*(q-1);
+- 接着找出小于r的整数e，并且e和r互质，求出e关于r的模反元素d。
+- (N,e)就是公钥，(N,d)就是私钥。

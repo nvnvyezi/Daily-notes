@@ -2,7 +2,7 @@
 
 路由配置
 
-```
+```js
 React.render((
   <Router>
     <Route path="/" component={App}>
@@ -26,9 +26,9 @@ React.render((
 
 
 
-ｏｎ方法更改为生命周期
+on方法更改为生命周期
 
-没有上面的嵌套写法　　替换为ｓｗｉｔｃｈ　绝对路径
+没有上面的嵌套写法　　替换为switch绝对路径
 
 路由路径匹配
 
@@ -36,7 +36,7 @@ React.render((
 - `()` – 在它内部的内容被认为是可选的
 - `*` – 匹配任意字符（非贪婪的）直到命中下一个字符或者整个 URL 的末尾，并创建一个 `splat` [参数](https://react-guide.github.io/react-router-cn/docs/guides/basics/docs/Glossary.md#params)
 
-```
+```js
 <Route path="/hello/:name">         // 匹配 /hello/michael 和 /hello/ryan
 <Route path="/hello(/:name)">       // 匹配 /hello, /hello/michael 和 /hello/ryan
 <Route path="/files/*.*">           // 匹配 /files/hello.jpg 和 /files/path/to/hello.jpg
@@ -72,7 +72,7 @@ Memory history 不会在地址栏被操作或读取。这就解释了我们是�
 
 没有集中路由配置，每个人都会`history`为你创建一个对象。在`<BrowserRouter>`创建了一个浏览器历史记录中，`<HashRouter>`创建一个哈希的历史，以及`<MemoryRouter>`创建一个存储的历史。在基于路线呈现内容所需的任何位置，您只需渲染一个`<Route>`组件。
 
-```
+```js
 <BrowserRouter>
   <div>
     <Route path='/about' component={About} />

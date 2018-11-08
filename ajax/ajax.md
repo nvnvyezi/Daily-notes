@@ -1,4 +1,4 @@
-```
+```js
 var Ajax={
   get: function(url, fn) {
     // XMLHttpRequest对象用于在后台与服务器交换数据   
@@ -33,44 +33,35 @@ var Ajax={
 
 **注释：**
 
-\1. open(method, url, async) 方法需要三个参数:
+1. open(method, url, async) 方法需要三个参数:
+   1.  method：发送请求所使用的方法（GET或POST）；与POST相比，GET更简单也更快，并且在大部分情况下都能用；然而，在以下情况中，请使用POST请求：
+      1. 无法使用缓存文件（更新服务器上的文件或数据库）
+      2. 向服务器发送大量数据（POST 没有数据量限制）
+      3. 发送包含未知字符的用户输入时，POST 比 GET 更稳定也更可靠
+   2. url：规定服务器端脚本的 URL(该文件可以是任何类型的文件，比如 .txt 和 .xml，或者服务器脚本文件，比如 .asp 和 .php （在传回响应之前，能够在服务器上执行任务）)；
+   3. async：规定应当对请求进行异步（true）或同步（false）处理；true是在等待服务器响应时执行其他脚本，当响应就绪后对响应进行处理；false是等待服务器响应再执行。
 
-　 method：发送请求所使用的方法（GET或POST）；与POST相比，GET更简单也更快，并且在大部分情况下都能用；然而，在以下情况中，请使用POST请求：
+2. send() 方法可将请求送往服务器。
 
-- 无法使用缓存文件（更新服务器上的文件或数据库）
-- 向服务器发送大量数据（POST 没有数据量限制）
-- 发送包含未知字符的用户输入时，POST 比 GET 更稳定也更可靠
+3. onreadystatechange：存有处理服务器响应的函数，每当 readyState 改变时，onreadystatechange 函数就会被执行。
 
-　url：规定服务器端脚本的 URL(该文件可以是任何类型的文件，比如 .txt 和 .xml，或者服务器脚本文件，比如 .asp 和 .php （在传回响应之前，能够在服务器上执行任务）)；
+4. readyState：存有服务器响应的状态信息。
+   - 0: 请求未初始化（代理被创建，但尚未调用 open() 方法）
+   - 1: 服务器连接已建立（`open`方法已经被调用）
+   - 2: 请求已接收（`send`方法已经被调用，并且头部和状态已经可获得）
+   - 3: 请求处理中（下载中，`responseText` 属性已经包含部分数据）
+   - 4: 请求已完成，且响应已就绪（下载操作已完成）
 
-　async：规定应当对请求进行异步（true）或同步（false）处理；true是在等待服务器响应时执行其他脚本，当响应就绪后对响应进行处理；false是等待服务器响应再执行。
-
-\2. send() 方法可将请求送往服务器。
-
-\3. onreadystatechange：存有处理服务器响应的函数，每当 readyState 改变时，onreadystatechange 函数就会被执行。
-
-\4. readyState：存有服务器响应的状态信息。
-
-- 0: 请求未初始化（代理被创建，但尚未调用 open() 方法）
-- 1: 服务器连接已建立（`open`方法已经被调用）
-- 2: 请求已接收（`send`方法已经被调用，并且头部和状态已经可获得）
-- 3: 请求处理中（下载中，`responseText` 属性已经包含部分数据）
-- 4: 请求已完成，且响应已就绪（下载操作已完成）
-
-\5. responseText：获得字符串形式的响应数据。
+5. responseText：获得字符串形式的响应数据。
 
 6. setRequestHeader()：POST传数据时，用来添加 HTTP 头，然后send(data)，注意data格式；GET发送信息时直接加参数到url上就可以，比如url?a=a1&b=b1。
 
 response的类型有两种：字符串类型和XML文本。两种回应的不同提取如下：
 
-```
-responseText 属性返回字符串形式的响应：
-
-
+```js
+//responseText 属性返回字符串形式的响应：
 document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-
-
-如果来自服务器的响应是 XML，需要作为 XML 对象进行解析，使用 responseXML ：
+//如果来自服务器的响应是 XML，需要作为 XML 对象进行解析，使用 responseXML ：
 xmlDoc=xmlhttp.responseXML; //获取服务器响应的XML文本并转换得到XMLDOM对象
 txt="";
 x=xmlDoc.getElementsByTagName("ARTIST");//通过XMLDOM对象调用方法来获取XML对象中的内容
@@ -90,17 +81,17 @@ form的enctype属性为编码方式，常用有两种：application/x-www-form-u
 
 **默认情况下，服务器对post请求和提交表单的请求不会一视同仁，需要服务器端有程序读取发送过来的原始数据，并从中解析出有用的部分。不过，可以模仿表单提交。。。**
 
-## 1.x-www-form-urlencoded
+**1.x-www-form-urlencoded**
 
 当action为get时候，浏览器用x-www-form-urlencoded的编码方式把form数据转换成一个字串（name1=value1&name2=value2…），然后把这个字串append到url后面，用?分割，加载这个新的url。
 
-## 2.multipart/form-data
+**2.multipart/form-data**
 
 当action为post时候，浏览器把form数据封装到http body中，然后发送到server。 如果没有type=file的控件，用默认的application/x-www-form-urlencoded就可以了。 但是如果有type=file的话，就要用到multipart/form-data了。浏览器会把整个表单以控件为单位分割，并为每个部分加上Content-Disposition(form-data或者file),Content-Type(默认为text/plain),name(控件name)等信息，并加上分割符(boundary)。
 
-### ajax工作原理
 
 
+#### ajax工作原理
 
     Ajax指Asynchronous JavaScript and XML（异步的 JavaScript 和 XML），最大的优点是在不重新加载整个页面的情况下，可以与服务器交换数据并更新部分网页内容。而实现的原理基础就是：网页DOM对象可以精确地对网页中的部分内容进行操作、XML作为单纯的数据存储载体使得客户端与服务器交换的只是网页内容的数据而没有网页样式等等的附属信息、XMLHttpRequest是与浏览器本身内置的request相互独立的与服务器交互的请求对象。
 
@@ -120,45 +111,67 @@ form的enctype属性为编码方式，常用有两种：application/x-www-form-u
 
 　　同步传输通常要比异步传输快速得多。接收方不必对每个字符进行开始和停止的操作。一旦检测到帧同步字符，它就在接下来的数据到达时接收它们。另外，同步传输的开销也比较少。例如，一个典型的帧可能有500字节（即4000比特）的数据，其中可能只包含100比特的开销。这时，增加的比特位使传输的比特总数增加2.5%，这与异步传输中25 %的增值要小得多。随着数据帧中实际数据比特位的增加，开销比特所占的百分比将相应地减少。但是，数据比特位越长，缓存数据所需要的缓冲区也越大，这就限制了一个帧的大小。另外，帧越大，它占据传输媒体的连续时间也越长。在极端的情况下，这将导致其他用户等得太久。
 
-### ajax所包含的技术
+#### ajax所包含的技术
 
-　　**ajax并非一种新的技术，而是几种原有技术的结合体。它由下列技术组合而成。**
+**ajax并非一种新的技术，而是几种原有技术的结合体。它由下列技术组合而成。**
 
-　1.使用CSS和XHTML来表示。
-
-   2. 使用DOM模型来交互和动态显示。
-
-   3.使用XMLHttpRequest来和服务器进行异步通信。
-
-   4.使用javascript来绑定和调用。
-
--  使用XHTML+CSS来标准化呈现； 
-- 使用XML和XSLT进行数据交换及相关操作； 
-- 使用XMLHttpRequest对象与Web服务器进行异步数据通信； 
-- 使用Javascript操作Document Object Model进行动态显示及交互；  
-- 使用JavaScript绑定和处理所有数据。
+1. 使用CSS和XHTML来表示。
+2. 使用DOM模型来交互和动态显示。
+3. 使用XMLHttpRequest来和服务器进行异步通信。
+4. 使用javascript来绑定和调用。使用XHTML+CSS来标准化呈现；
+5. 使用XML和XSLT进行数据交换及相关操作； 
+6. 使用XMLHttpRequest对象与Web服务器进行异步数据通信； 
+7. 使用Javascript操作Document Object Model进行动态显示及交互； 
+8. 使用JavaScript绑定和处理所有数据。
 
 在上面几中技术中，除了XmlHttpRequest对象以外，其它所有的技术都是基于web标准并且已经得到了广泛使用的，XMLHttpRequest虽然目前还没有被W3C所采纳，但是它已经是一个事实的标准，因为目前几乎所有的主流浏览器都支持它。
 
-### ajax缺点
+#### ajax缺点
 
-1.  ajax干掉了back按钮，即对浏览器后退机制的破坏。后退按钮是一个标准的web站点的重要功能，但是它没法和js进行很好的合作。这是ajax所带来的一个比较严重的问题，因为用户往往是希望能够通过后退来取消前一次操作的。那么对于这个问题有没有办法？答案是肯定的，用过Gmail的知道，Gmail下面采用的ajax技术解决了这个问题，在Gmail下面是可以后退的，但是，它也并不能改变ajax的机制，它只是采用的一个比较笨但是有效的办法，即用户单击后退按钮访问历史记录时，通过创建或使用一个隐藏的IFRAME来重现页面上的变更。（例如，当用户在Google Maps中单击后退时，它在一个隐藏的IFRAME中进行搜索，然后将搜索结果反映到Ajax元素上，以便将应用程序状态恢复到当时的状态。）但是，虽然说这个问题是可以解决的，但是它所带来的开发成本是非常高的，和ajax框架所要求的快速开发是相背离的。这是ajax所带来的一个非常严重的问题。
+1. ajax干掉了back按钮，即对浏览器后退机制的破坏。
+   - 后退按钮是一个标准的web站点的重要功能，但是它没法和js进行很好的合作。这是ajax所带来的一个比较严重的问题，因为用户往往是希望能够通过后退来取消前一次操作的。那么对于这个问题有没有办法？答案是肯定的，用过Gmail的知道，Gmail下面采用的ajax技术解决了这个问题，在Gmail下面是可以后退的，但是，它也并不能改变ajax的机制，它只是采用的一个比较笨但是有效的办法，即用户单击后退按钮访问历史记录时，通过创建或使用一个隐藏的IFRAME来重现页面上的变更。（例如，当用户在Google Maps中单击后退时，它在一个隐藏的IFRAME中进行搜索，然后将搜索结果反映到Ajax元素上，以便将应用程序状态恢复到当时的状态。）但是，虽然说这个问题是可以解决的，但是它所带来的开发成本是非常高的，和ajax框架所要求的快速开发是相背离的。这是ajax所带来的一个非常严重的问题。
 
-​     2、安全问题
+2. 安全问题
+   - 技术同时也对IT企业带来了新的安全威胁，ajax技术就如同对企业数据建立了一个直接通道。这使得开发者在不经意间会暴露比以前更多的数据和服务器逻辑。ajax的逻辑可以对客户端的安全扫描技术隐藏起来，允许黑客从远端服务器上建立新的攻击。还有ajax也难以避免一些已知的安全弱点，诸如跨站点脚步攻击、SQL注入攻击和基于credentials的安全漏洞等。
+3. 对搜索引擎的支持比较弱。
+4. 破坏了程序的异常机制。至少从目前看来，像ajax.dll，ajaxpro.dll这些ajax框架是会破坏程序的异常机制的。
+5. 另外，像其他方面的一些问题，比如说违背了url和资源定位的初衷。例如，我给你一个url地址，如果采用了ajax技术，也许你在该url地址下面看到的和我在这个url地址下看到的内容是不同的。这个和资源定位的初衷是相背离的。
+6. 一些手持设备（如手机、PDA等）现在还不能很好的支持ajax，比如说我们在手机的浏览器上打开采用ajax技术的网站时，它目前是不支持的，当然，这个问题和我们没太多关系。
 
-技术同时也对IT企业带来了新的安全威胁，ajax技术就如同对企业数据建立了一个直接通道。这使得开发者在不经意间会暴露比以前更多的数据和服务器逻辑。ajax的逻辑可以对客户端的安全扫描技术隐藏起来，允许黑客从远端服务器上建立新的攻击。还有ajax也难以避免一些已知的安全弱点，诸如跨站点脚步攻击、SQL注入攻击和基于credentials的安全漏洞等。
+[XMLHttpRequest 对象](http://www.w3school.com.cn/xml/xml_http.asp)
 
-​     3、对搜索引擎的支持比较弱。
+[XML DOM - XMLHttpRequest 对象](http://www.w3school.com.cn/xmldom/dom_http.asp)
 
-​     4、破坏了程序的异常机制。至少从目前看来，像ajax.dll，ajaxpro.dll这些ajax框架是会破坏程序的异常机制的。关于这个问题，我曾经在开发过程中遇到过，但是查了一下网上几乎没有相关的介绍。后来我自己做了一次试验，分别采用ajax和传统的form提交的模式来删除一条数据……给我们的调试带来了很大的困难。
+**请求伪造IP**
 
-​     5、另外，像其他方面的一些问题，比如说违背了url和资源定位的初衷。例如，我给你一个url地址，如果采用了ajax技术，也许你在该url地址下面看到的和我在这个url地址下看到的内容是不同的。这个和资源定位的初衷是相背离的。
+> 我们只需要伪造这样的头部“x-forwarded-for”、“Proxy-Client-IP”、“WL-Proxy-Client-IP”，即可让服务器认为我们的地址是伪造的地址，从而绕过服务器端IP地址范围、单一IP地址不可多次访问等限制措施。
 
-​     6、一些手持设备（如手机、PDA等）现在还不能很好的支持ajax，比如说我们在手机的浏览器上打开采用ajax技术的网站时，它目前是不支持的，当然，这个问题和我们没太多关系。
+```js
+$.ajax('/login', {
+    headers : {
+        'x-forwarded-for': ip,
+        //  'Proxy-Client-IP': ip,
+        'WL-Proxy-Client-IP': ip
+    },
+    method:'POST',
+    contentType:'application/json;charset=utf-8',
+    //  以Payload方式提交
+    data : JSON.stringify(data),
+    success : function(datas) {
+        //  输出结果
+        console.log(datas)
+    }
+})
+```
 
-
-
-# [XMLHttpRequest 对象](http://www.w3school.com.cn/xml/xml_http.asp)
-
-# [XML DOM - XMLHttpRequest 对象](http://www.w3school.com.cn/xmldom/dom_http.asp)
+```js
+//  这产生的IP可能会落在内网
+function createIp() {
+    var a = Math.round(Math.random() * 250) + 1,
+        b = Math.round(Math.random() * 250) + 1,
+    c = Math.round(Math.random() * 240) + 1,
+    d = Math.round(Math.random() * 240) + 1;
+    return [a, b, c, d].join('.');
+}
+```
 
