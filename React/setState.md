@@ -104,6 +104,37 @@ ReactComponent.prototype.setState = function (partialState, callback) {
 };
 ```
 
+```js
+/**
+ * Sets a subset of the state. Always use this to mutate
+ * state. You should treat `this.state` as immutable.
+ *设置状态的子集。总是用这个来变异状态。你应该使this.state是不可变的
+ * There is no guarantee that `this.state` will be immediately updated, so
+ * accessing `this.state` after calling this method may return the old value.
+ *
+ * There is no guarantee that calls to `setState` will run synchronously,
+ * as they may eventually be batched together.  You can provide an optional
+ * callback that will be executed when the call to setState is actually
+ * completed.
+ *这是没有保证的。状态'将被立即更新，所以访问这个。调用此方法后，state '可能返回旧值。
+ * When a function is provided to setState, it will be called at some point in
+ * the future (not synchronously). It will be called with the up to date
+ * component arguments (state, props, context). These values can be different
+ * from this.* because your function may be called after receiveProps but before
+ * shouldComponentUpdate, and this new state, props, and context will not yet be
+ * assigned to this.
+ *当一个函数被提供给setState时，它将在将来的某个时候被调用(不是同步的)。它将与最新的组件参数(状态、道具、上下文)一起调用。
+ 这些值可能与这个不同。因为你的功能可能会在收到道具后被调用，但在那之前shouldComponentUpdate和这个新的状态、道具和上下文还没有被分配到这个。
+ * @param {object|function} partialState Next partial state or function to
+ *        produce next partial state to be merged with current state.
+ * 下一个部分状态或函数，以生成下一个部分状态并与当前状态合并。
+ * @param {?function} callback Called after state is updated.状态更新后调用。
+ * @final
+ * @protected
+ */
+//总结一下就是说this.state理论应该是不可变的，如果想更新请使用setstate,在使用setstate后不能保证是立即更新的，所以得到的值有可能还是旧值，setstate的第一个参数有两种，object和function，当为函数时，会在将来的某个时刻调用（不保证同步），但是有可能值已经变化，因为他是在收到参数后被调用，丛生命周期那章可以看到更新是在shouldComponentUpdate之前完成的。不明白的可以继续向下看。
+```
+
 在setState中，首先调用`this.updater.enqueueSetState`,先明确`this.updater`是什么，在React中每个组件有拥有一个`this.updater`，是用来驱动`state`更新的工具对象。当我们在组件中的构造函数中调用`super`时实质调用的就是函数`ReactComponent`。其中有: 
 
 ```js
@@ -577,3 +608,5 @@ _addValue() {
 - 一次batch(批量)的生命周期就是从`ReactDefaultBatchingStrategy`事务perform之前(调用ReactUpdates.batchUpdates)到这个事务的最后一个close方法调用后结束;
 - 事务启动后, 遇到 setState 则将 partial state 存到组件实例的_pendingStateQueue上, 然后将这个组件存到dirtyComponents 数组中, 等到 `ReactDefaultBatchingStrategy`事务结束时调用`runBatchedUpdates`批量更新所有组件;
 - 组件的更新是递归的, 三种不同类型的组件都有自己的`updateComponent`方法来决定自己的组件如何更新, 其中 ReactDOMComponent 会采用diff算法对比子元素中最小的变化, 再批量处理.
+
+![](161df93690f3abac.png)

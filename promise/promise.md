@@ -4,7 +4,7 @@
 
 ### **最简单的形态**
 
-```
+```js
 function Promise(fn) {
     var value = null,
         callbacks = [];  //callbacks为数组，因为可能同时有很多个回调
@@ -29,7 +29,7 @@ function Promise(fn) {
 
 ### **链式调用**
 
-```
+```js
 this.then = function (onFulfilled) {
     callbacks.push(onFulfilled);
     return this;
@@ -40,7 +40,7 @@ this.then = function (onFulfilled) {
 
 ### **延时机制**
 
-```
+```js
 function Promise (fn) {
 	let value  = null;
 	let callbacks = [];
@@ -78,7 +78,7 @@ pro().then(function (id) {
  })
 ```
 
-![1530000737305](/tmp/1530000737305.png)
+
 
 大家会发现在then注册之前  resolve 就执行了
 
@@ -98,7 +98,7 @@ Promises/A+规范中的2.1Promise States中明确规定了，pending可以转化
 
 
 
-```
+```js
 function Promise (fn) {
 	let value  = null;
 	let state = 'pending';
@@ -144,7 +144,7 @@ pro().then(function (id) {
  })
 ```
 
-![1530001644145](/tmp/1530001644145.png)
+
 
 resolve执行时，会将状态设置为fulfilled，在此之后调用then添加的新回调，都会立即执行。
 
@@ -152,7 +152,7 @@ resolve执行时，会将状态设置为fulfilled，在此之后调用then添加
 
 比如
 
-```
+```js
 getUserId()
     .then(getUserJobById)
     .then(function (job) {
@@ -170,7 +170,7 @@ function getUserJobById(id) {
 
 - 链式Promise是指在当前promise达到fulfilled状态后，即开始进行下一个promise（后邻promise）
 
-```
+```js
 function Promise (fn) {
 	let value  = null;
 	let state = 'pending';
@@ -252,7 +252,7 @@ pro().then(function (id) {
 
 ### **失败处理**
 
-```
+```js
 function Promise (fn) {
 	let value  = null;
 	let state = 'pending';
@@ -348,7 +348,7 @@ pro().then(function (id) {
 
 ### **异常处理**
 
-```
+```js
 function handle(callback) {
     if (state === 'pending') {
         callbacks.push(callback);

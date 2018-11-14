@@ -22,7 +22,7 @@ console.log(5);
 
 **执行很多任务**
 **（１）排队：**　因为一个进程一次只能执行一个任务，只好等前面的任务执行完了，才能执行后面的任务．
-**（２）新建进程：　**使用ｆｏｒｋ命令，　为每个任务新建一个进程
+**（２）新建进程：　**使用fork命令，　为每个任务新建一个进程
 **（３）新建线程：　**因为进程太耗费资源，所以如今的程序往往允许一个进程包含多个线程，由线程去完成任务．
 
 ###**js(单线程)采用第一种方式．**
@@ -41,9 +41,9 @@ console.log(5);
 > 上图表明，多线程不仅占用多倍的系统资源，也闲置多倍的资源，这显然不合理。
 >
 
-###**引入ＥｖｅｎｔＬｏｏｐ**
+###**引入EventLoop**
 
-**ＥｖｅｎｔＬｏｏｐ是一个程序结构，用于等待和发送消息和事件**
+**EventLoop是一个程序结构，用于等待和发送消息和事件**
 
 > 简单说，就是在程序中设置两个线程：一个负责程序本身的运行，称为"主线程"；另一个负责主线程与其他进程（主要是各种I/O操作）的通信，被称为"Event Loop线程"（可以译为"消息线程"）。
 
@@ -166,27 +166,32 @@ process.nextTick方法可以在当前"执行栈"的尾部----下一次Event Loop
 
 如果有多个process.nextTick语句（不管它们是否嵌套），将全部在当前"执行栈"执行。
 
+```js
 setImmediate(function (){
   setImmediate(function A() {
-​	console.log(1);
-​	setImmediate(function B(){console.log(2);});
+	console.log(1);
+	setImmediate(function B(){console.log(2);});
   });
 
   setTimeout(function timeout() {
-​	console.log('TIMEOUT FIRED');
+	console.log('TIMEOUT FIRED');
   }, 0);
 });
 // 1
 // TIMEOUT FIRED
 // 2
+```
 
 上面代码中，setImmediate和setTimeout被封装在一个setImmediate里面，它的运行结果总是1--TIMEOUT FIRED--2，这时函数A一定在timeout前面触发。至于2排在TIMEOUT FIRED的后面（即函数B在timeout后面触发），是因为setImmediate总是将事件注册到下一轮Event Loop，所以函数A和timeout是在同一轮Loop执行，而函数B在下一轮Loop执行。
 
 **我们由此得到了process.nextTick和setImmediate的一个重要区别：多个process.nextTick语句总是在当前"执行栈"一次执行完，多个setImmediate可能则需要多次loop才能执行完。事实上，这正是Node.js 10.0版添加setImmediate方法的原因，否则像下面这样的递归调用process.nextTick，将会没完没了，主线程根本不会去读取"事件队列"！**
 
+```js
 process.nextTick(function foo() {
   process.nextTick(foo);
 });
+```
+
 递归,Node.js会抛出一个警告，要求你改成setImmediate。
 
 另外，由于process.nextTick指定的回调函数是在本次"事件循环"触发，而setImmediate指定的是在下次"事件循环"触发，所以很显然，前者总是比后者发生得早，而且执行效率也高（因为不用检查"任务队列"）。

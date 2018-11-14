@@ -1,11 +1,6 @@
-Content-Type: text/x-zim-wiki
-Wiki-Format: zim 0.4
-Creation-Date: 2018-06-14T13:00:48+08:00
 
-====== vue-简单认识 ======
-创建日期 星期四 14 六月 2018
 
-{{./pasted_image.png}}
+![](./pasted_image.png)
 
 Vue 程序结构
 
@@ -16,8 +11,7 @@ Vue.js 是一个非常典型的 MVVM 的程序结构，整个程序从最上层�
 vm 实例设计：包括接口设计 (vm 原型)、实例初始化过程设计 (vm 构造函数)
 这里面大部分内容可以直接跟 Vue.js 的官方 API 参考文档对应起来，但文档里面没有且值得一提的是构造函数的设计，下面是我摘出的构造函数最核心的工作内容。
 
-{{./pasted_image001.png}}
-
+![](./pasted_image001.png)
 
 Vue 实例初始化
 
