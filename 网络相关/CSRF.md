@@ -27,3 +27,6 @@
       对于 GET 请求，token 将附在请求地址之后，这样 URL 就变成 http://url?csrftoken=tokenvalue。 而对于 POST 请求来说，要在 form 的最后加上 `<input type="hidden" name="csrftoken" value="tokenvalue"/>`，这样就把token以参数的形式加入请求了。
 4. header中自定义属性
 
+
+
+> CSRF，跨站请求伪造，比如说有人在登录安全网站A的情况下，并且没有退出，紧接着又去一个恶意网站浏览。并且不小心点了一些东西，这时候恶意网站向安全网站发起了一个请求，并且携带者正常网站的cookie，就可以在用户不知情的情况下进行一些操作，而要进行防御的话，可以使用验证码，token，referer，或者客户端和后台商量使用一些自定义的请求头。

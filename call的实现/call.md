@@ -2,9 +2,9 @@
 
 ### **call**
 
-该`**call()**`方法调用具有给定`this`值的函数和单独提供的参数。
+该`call()`方法调用具有给定`this`值的函数和单独提供的参数。
 
-```
+```js
 function.call(thisArg, arg1, arg2, ...)
 ```
 
@@ -20,7 +20,7 @@ function.call(thisArg, arg1, arg2, ...)
 
  **例子**
 
-```
+```js
 function First (a, b) {
   this.a = a;
   this.b =b;
@@ -39,7 +39,7 @@ console.log(test)
 
 ### **ok，正文开始**
 
-```
+```js
 function say() {
   console.log(this.name);
 }
@@ -57,7 +57,7 @@ say.call(obj);
 
 那不用call怎么实现呢
 
-```
+```js
 let obj = {
   name: 'sd',
   say: function () {
@@ -75,7 +75,7 @@ obj.say();
 2. 执行该函数
 3. 删除该函数
 
-```
+```js
 
 Function.prototype.call1 = function (context) {
   context.fn = this;
@@ -97,7 +97,7 @@ say.call1(obj);
 
 上面这段代码就是模拟我们上面实现的那三 步，ok，我们已经实现了this绑定，那还有参数呢，请往下看
 
-```
+```js
 Function.prototype.call1 = function (context) {
   let arr = [];
   for (let i = 1; i < arguments.length; i++) {
@@ -122,7 +122,7 @@ say.call1(obj, 15, 'lu');
 
 ok，还差最后一步，传入null或者函数有返回值
 
-```
+```js
 Function.prototype.call1 = function (context) {
   let arr = [];
   // for (let i = 1; i < arguments.length; i++) {
@@ -152,5 +152,5 @@ let res = say.call1(null, 15, 'lu');
 console.log(res)
 ```
 
-![1533048578138](/tmp/1533048578138.png)
+
 

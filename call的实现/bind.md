@@ -18,7 +18,7 @@ function.bind（thisArg [，arg1 [，arg2 [，...]]]）
 
 具有指定**this**值和初始参数的给定函数的副本。
 
-```
+```js
 Function.prototype.bind1 = function(context) {
   if (typeof this !== "function") {
     throw new Error("Function.prototype.bind - what is trying to be bound is not callable");

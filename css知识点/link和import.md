@@ -16,10 +16,6 @@ link: 为当前页服务
 
 兼容性问题
 
-
-
-
-
 FOUC( Flash Of Unstyled Content)文档样式闪烁
 
 **是什么**
@@ -46,7 +42,7 @@ IE在加载网页的时候,出现短暂的
 
 5. 当解析到external stylesheet时就先加载，然后如internal stylesheet那样解析和刷新CSSOM Tree和Render Tree了。
     上述步骤5中由于样式文件存在下载这个延时不确定的阶段，因此网络环境不好或样式资源体积大的情况下我们可以看到样式闪烁明显。
-    这就是为什么我们将external stylesheet的引入放在`head`标签中的原因，在`body`渲染前先把相对完整的CSSOM Tree构建好。但大家都听说过`script`会阻塞html页面解析(block parsing)，而`link`不会，那假如网络环境不好或样式资源体积大时，`body`已经解析并加入到DOM Tree后，external stylesheet才加载完成，不是也会造成FOUC吗？
+       这就是为什么我们将external stylesheet的引入放在`head`标签中的原因，在`body`渲染前先把相对完整的CSSOM Tree构建好。但大家都听说过`script`会阻塞html页面解析(block parsing)，而`link`不会，那假如网络环境不好或样式资源体积大时，`body`已经解析并加入到DOM Tree后，external stylesheet才加载完成，不是也会造成FOUC吗？
 
     `style`,`link`等样式资源的下载、解析确实不会阻塞页面的解析，但它们会阻塞页面的渲染(block rendering)。
 

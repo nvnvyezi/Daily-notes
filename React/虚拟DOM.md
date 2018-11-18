@@ -115,7 +115,78 @@ pureComponentPrototype.isPureReactComponent = true;
 
 从上面我们发现setstate这些方法都是继承自`Component`，并且`PureComponent`的构造函数和`Component`是一模一样的，在原型上面共享了`Component`的，并且加了判断是哪种类型
 
-在创建组件的时候会发现实际调用的是`createElement`，
+在创建组件的时候会发现实际调用的是`createElement`，但是在react源码中还做了一层
+
+```js
+// 创建带有验证的元素
+function createElementWithValidation(type, props, children) {
+  // 检测type是否是有效的元素类型
+  var validType = isValidElementType(type);
+
+  // We warn in this case but don't throw. We expect the element creation to
+  // succeed and there will likely be errors in render.
+  // 在这种情况下我们警告，但不要投掷。我们希望元素创建成功，渲染中可能会出现错误。即判断组件是否有效
+  if (!validType) {
+    var info = '';
+    if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+      // 您可能忘记从文件' + '中导出组件，或者您可能混淆了默认导入和命名导入
+      info += ' You likely forgot to export your component from the file ' + "it's defined in, or you might have mixed up default and named imports.";
+    }
+		// 获取源信息错误附录,获取错误的地方，例子Check your code at index.js:873."
+    var sourceInfo = getSourceInfoErrorAddendum(props);
+    if (sourceInfo) {
+      info += sourceInfo;
+    } else {
+      info += getDeclarationErrorAddendum();
+    }
+
+    var typeString = void 0;
+    if (type === null) {
+      typeString = 'null';
+    } else if (Array.isArray(type)) {
+      typeString = 'array';
+    } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
+      typeString = '<' + (getComponentName(type.type) || 'Unknown') + ' />';
+      info = ' Did you accidentally export a JSX literal instead of a component?';
+    } else {
+      typeString = typeof type;
+    }
+
+    warning$1(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+  }
+
+  var element = createElement.apply(this, arguments);
+
+  // The result can be nullish if a mock or a custom function is used.
+  // TODO: Drop this when these are no longer allowed as the type argument.
+  // 如果使用了mock或自定义函数，则结果可能为空。TODO:当不再允许这些参数作为类型参数时删除它。
+  if (element == null) {
+    return element;
+  }
+
+  // Skip key warning if the type isn't valid since our key validation logic
+  // doesn't expect a non-string/function type and can throw confusing errors.
+  // We don't want exception behavior to differ between dev and prod.
+  // (Rendering will throw with a helpful message and as soon as the type is
+  // fixed, the key warnings will appear.)
+  // 如果类型无效，则跳过键警告，因为我们的键验证逻辑不期望非字符串/函数类型，并可能抛出令人困惑的错误。我们不希望在dev和prod之间出现异常行为(呈现会抛出有用的消息，一旦类型被修复，就会出现关键警告)。
+  if (validType) {
+    for (var i = 2; i < arguments.length; i++) {
+      validateChildKeys(arguments[i], type);
+    }
+  }
+
+  if (type === REACT_FRAGMENT_TYPE) {
+    validateFragmentProps(element);
+  } else {
+    validatePropTypes(element);
+  }
+
+  return element;
+}
+```
+
+接下来看`ReactElement`
 
 ```js
 /**
@@ -142,6 +213,7 @@ function createElement(type, config, children) {
     if (hasValidRef(config)) {
       ref = config.ref;
     }
+    //判断config上面是否有key，并且key是有效的
     if (hasValidKey(config)) {
       key = '' + config.key;
     }
@@ -149,6 +221,7 @@ function createElement(type, config, children) {
     self = config.__self === undefined ? null : config.__self;
     source = config.__source === undefined ? null : config.__source;
     // Remaining properties are added to a new props object
+    // 剩余的属性被添加到一个新的道具对象中
     for (propName in config) {
       if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
         props[propName] = config[propName];
@@ -158,6 +231,7 @@ function createElement(type, config, children) {
 
   // Children can be more than one argument, and those are transferred onto
   // the newly allocated props object.
+  // 子参数可以是多个参数，这些参数被转移到新分配的props对象上。
   var childrenLength = arguments.length - 2;
   if (childrenLength === 1) {
     props.children = children;
@@ -175,6 +249,7 @@ function createElement(type, config, children) {
   }
 
   // Resolve default props
+  // 分解defaultprops
   if (type && type.defaultProps) {
     var defaultProps = type.defaultProps;
     for (propName in defaultProps) {
@@ -187,9 +262,11 @@ function createElement(type, config, children) {
     if (key || ref) {
       var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
       if (key) {
+        // 定义key为只读，不能像其他的props一样可以传递给子组件,如果需要传递，则应该在设置另外一个值进行传递
         defineKeyPropWarningGetter(props, displayName);
       }
       if (ref) {
+        //定义ref为只读，不能访问
         defineRefPropWarningGetter(props, displayName);
       }
     }
@@ -198,3 +275,79 @@ function createElement(type, config, children) {
 }
 ```
 
+在最后将处理的值给`ReactElement`，
+
+```js
+var ReactElement = function (type, key, ref, self, source, owner, props) {
+  //创建组件一些基本的属性
+  var element = {
+    // This tag allows us to uniquely identify this as a React Element
+    // 这个标记允许我们唯一地将其标识为React元素
+    $$typeof: REACT_ELEMENT_TYPE,
+
+    // Built-in properties that belong on the element
+    // 属于元素的内置属性
+    type: type,
+    key: key,
+    ref: ref,
+    props: props,
+
+    // Record the component responsible for creating this element.
+    // 记录负责创建此元素的组件。
+    _owner: owner
+  };
+
+  {
+    // The validation flag is currently mutative. We put it on
+    // an external backing store so that we can freeze the whole object.
+    // This can be replaced with a WeakMap once they are implemented in
+    // commonly used development environments.
+    // 验证标志目前是可变的。我们把它放在一个外部备份存储上，这样我们就可以冻结整个对象。一旦在常用的开发环境中实现了这些功能，就可以用WeakMap替换它们。
+    element._store = {};
+
+    // To make comparing ReactElements easier for testing purposes, we make
+    // the validation flag non-enumerable (where possible, which should
+    // include every environment we run tests in), so the test framework
+    // ignores it.
+    // 为了使比较反应物元素更容易用于测试目的，我们使验证标志不可枚举(如果可能的话，应该包括我们运行测试的每个环境)，因此测试框架忽略了它。
+    Object.defineProperty(element._store, 'validated', {
+      configurable: false,
+      enumerable: false,
+      writable: true,
+      value: false
+    });
+    // self and source are DEV only properties.
+    // self和source仅是DEV属性。
+    
+    Object.defineProperty(element, '_self', {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: self
+    });
+    // Two elements created in two different places should be considered
+    // equal for testing purposes and therefore we hide it from enumeration.
+    // 在两个不同的位置创建的两个元素在测试目的上应该被认为是相等的，因此我们对枚举隐藏它。
+    Object.defineProperty(element, '_source', {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: source
+    });
+    if (Object.freeze) {
+      Object.freeze(element.props);
+      Object.freeze(element);
+    }
+  }
+
+  return element;
+};
+```
+
+再来一张图，可以结合着看，`$$typeof`,`key`, `props`,	`ref`,  `_owner_`也就是上面我们的element，
+
+- key 代表元素唯一id值, 意味着只要id改变, 就算前后元素种类相同, 元素也肯定不一样了;
+- type 代表元素种类,  有 function(空的wrapper)、class(自定义类)、string(具体的DOM元素名称)类型, 与key一样, 只要改变, 元素肯定不一样;
+- props 是元素的属性, 任何写在标签上的属性(如className='container')都会被存在这里, 如果这个元素有子元素(包括文本内容), props就会有children属性, 存储子元素; children属性是递归插入、递归更新的依据;
+
+![1542293755665](./1542293755665.png)

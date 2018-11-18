@@ -121,7 +121,7 @@ form的enctype属性为编码方式，常用有两种：application/x-www-form-u
 7. 使用Javascript操作Document Object Model进行动态显示及交互； 
 8. 使用JavaScript绑定和处理所有数据。
 
-在上面几中技术中，除了XmlHttpRequest对象以外，其它所有的技术都是基于web标准并且已经得到了广泛使用的，XMLHttpRequest虽然目前还没有被W3C所采纳，但是它已经是一个事实的标准，因为目前几乎所有的主流浏览器都支持它。
+在上面几种技术中，除了XmlHttpRequest对象以外，其它所有的技术都是基于web标准并且已经得到了广泛使用的，XMLHttpRequest虽然目前还没有被W3C所采纳，但是它已经是一个事实的标准，因为目前几乎所有的主流浏览器都支持它。
 
 #### ajax缺点
 

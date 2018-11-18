@@ -222,19 +222,19 @@ name 属性可设置或返回存放窗口的名称的一个字符串。
 
 父窗口先打开一个子窗口，载入一个不同源的网页，该网页将信息写入`window.name`属性。
 
-> ```
+> ```js
 > window.name = data;
 > ```
 
 接着，子窗口跳回一个与主窗口同域的网址。
 
-> ```
+> ```js
 > location = 'http://parent.url.com/xxx.html';
 > ```
 
 然后，主窗口就可以读取子窗口的`window.name`了。
 
-> ```
+> ```js
 > var data = document.getElementById('myFrame').contentWindow.name;
 > ```
 
@@ -242,7 +242,7 @@ name 属性可设置或返回存放窗口的名称的一个字符串。
 
 假设index页面请求远端服务器上的数据，我们在该页面下创建iframe标签，该iframe的src指向服务器文件的地址（iframe标签src可以跨域），服务器文件里设置好window.name的值，然后再在index.html里面读取改iframe中的window.name的值。完美~
 
-```
+```js
 <body>
   <script type="text/javascript"> 
     iframe = document.createElement('iframe'),
@@ -259,7 +259,7 @@ name 属性可设置或返回存放窗口的名称的一个字符串。
 
 因为规定如果index.html页面和和该页面里的iframe框架的src如果不同源，则也无法操作框架里的任何东西，所以就取不到iframe框架的name值了，告诉你我们不是一家的，你也休想得到我这里的数据。 既然要同源，那就换个src去指，前面说了无论怎样加载window.name值都不会变化，于是我们在index.html相同目录下，新建了个proxy.html的空页面，修改代码如下：
 
-```
+```js
 <body>
   <script type="text/javascript"> 
     iframe = document.createElement('iframe'),
@@ -275,7 +275,7 @@ name 属性可设置或返回存放窗口的名称的一个字符串。
 
 理想似乎很美好，在iframe载入过程中，迅速重置iframe.src的指向，使之与index.html同源，那么index页面就能去获取它的name值了！但是现实是残酷的，iframe在现实中的表现是一直不停地刷新， 也很好理解，每次触发onload时间后，重置src，相当于重新载入页面，又触发onload事件，于是就不停地刷新了（但是需要的数据还是能输出的）。修改后代码如下：
 
-```
+```js
 <body>
   <script type="text/javascript"> 
     iframe = document.createElement('iframe');
