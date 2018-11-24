@@ -42,8 +42,13 @@ Redux是将整个应用状态存储到一个地方上称为**store**,里面保�
 
 - Action
   - state的改变会导致view的变化，但是在redux中不能直接操作state也就是说不能使用`this.setState`来操作，用户只能接触到View。在Redux中提供了一个对象来告诉Store需要改变state。Action是一个对象其中type属性是必须的，表示Action的名称，其他的可以根据需求自由设置。
-  - `store.dispatch( )`是view发出Action的唯一办法
+  - `store.dispatch()`是view发出Action的唯一办法
 
 - Reducer
   - Store收到Action以后，必须给出一个新的state，这样view才会发生变化。这种**state的计算过程**就叫做Reducer。
     Reducer是一个纯函数，他接收Action和当前state作为参数，返回一个新的state
+
+
+
+>Redux的话我认为它主要使用是数据特别多，不好管理，或者说组件间毫无联系，或者嵌套层级过深又涉及到状态管理，redux的实现的话，它是在store中存储一个或者多个state，即将数据放在一起统一管理。并且认为这个数据是只读的，也就是说想更改的话，就需要客户端dispatch一个action，在action里面定义需要更改的类型，再将这个类型传给reducer，在reducer里面进行操作，并且reducer是一个纯函数，也就是期望传入一个值，传出的这个值是期望的值，在reducer更改状态之后，将这个值在传给store更新state，最后组件拿到这个新的state值，并进行更新。
+

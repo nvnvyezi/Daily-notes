@@ -351,3 +351,8 @@ var ReactElement = function (type, key, ref, self, source, owner, props) {
 - props 是元素的属性, 任何写在标签上的属性(如className='container')都会被存在这里, 如果这个元素有子元素(包括文本内容), props就会有children属性, 存储子元素; children属性是递归插入、递归更新的依据;
 
 ![1542293755665](./1542293755665.png)
+
+
+
+> react虚拟dom的话实际就是用js对象来描述dom结构，在我们创建一个class组件的时候，实际上创建的是一个ReactcompositeComponent组件，我们每次写的时候都会写extends React。Component，实际就是继承React的component或者PureComponent，在Component里面就有我们的props，refs，context等，而PureComponent和COmponent的构造函数是一样的，不一样的是他借助了一个辅助函数继承了Component的原型，并且使自己也成为了一个构造函数，在实际创建组件的时候，实际上是使用了createElement，在这个之前辉县判断type是否有效，在他的内部，对我们在组件上写的key，refs等进行一个处理，比如判断key是否有效，以及设置key不可被当做props传给下面，随后将这这些属性传给ReactElement，在Reactelement中创建我们一开始看的那种对象，我们都知道props是不可变的，其实就是字Reactelement中使用了freeze，使对象无法修改，并且无法添加新的属性，也无法删除属性，并且无法修改属性的值。
+

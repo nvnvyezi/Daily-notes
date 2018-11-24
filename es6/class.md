@@ -1,8 +1,8 @@
-# CLASS
+#### class
 
 另外，类的内部所有定义的方法，都是不可枚举的（non-enumerable）。
 
-```
+```js
 class Point {
   constructor () {
     return Object.create(null);
@@ -20,13 +20,143 @@ console.log(new Point() instanceof Point);
 // []
 // [ 'constructor', 'test' ]
 // false
+```
 
+#### Object.getPrototypeOf
+
+`Object.getPrototypeOf`方法可以用来从子类上获取父类。
+
+#### super
+
+既可以当做函数也可以当做对象
+
+##### 函数
+
+作为函数调用时，代表父类的构造函数，ES6要求，子类的构造函数必须执行一次`super`，
+
+> super虽然代表父类的构造函数，但是返回的是子类的实例，即super内部的this指向子类
+>
+> 只能在子类的构造函数中使用
+
+```js
+class A {
+  constructor() {
+    console.log(new.target.name)
+  }
+}
+class B extends A {
+  constructor(){
+    super(); // A.prototype.constructor.call(this)
+  }
+}
+new A(); //A
+new B(); //B
+```
+
+##### 对象
+
+- 在普通方法中，指向父类的原型对象
+- 静态方法中，指向父类
+
+```js
+class A {
+  constructor(){
+    this.na = 'A';
+    this.num = 0;
+  }
+  static me (num) {
+    console.log('A', num);
+  }
+  static p1 () {
+    console.log(this.na, 'sdsd');
+  }
+  p () {
+    console.log('p');
+  }
+  p1 () {
+    console.log(this.na);
+  }
+  me () {
+    console.log('meA');
+  }
+}
+A.prototype.num1 = 1;
+class B extends A {
+  constructor(){
+    super();
+    this.na = 'B';
+    super.p(); //p  指向原型对象
+    console.log(super.num); //undefined 拿不到父类实例上的属性或方法
+    console.log(super.num1); // 1
+  }
+  static me (num) {
+    super.me(num);
+  }
+  static p3 () {
+    super.p1();
+  }
+  p2() {
+    super.p1(); // B this指向当期的子类实例 super.p1.call(this)
+  }
+  me () {
+    super.me();
+  }
+}
+B.na = 'static';
+B.me(2); //A 2
+B.p3(); //static this指向B 而不是B的实例
+let test = new B();
+test.p2(); //B
+test.me(); //meA
 
 ```
 
 
 
-## constructor
+#### 类的`prototype`属性和`__Proto__`属性
+
+**两条继承链**
+
+- 子类的`__Proto__`属性，表示构造函数的继承，总是指向父类
+- 子类`prototype`属性的`_proto_`属性，表示方法的继承，总是指向父类的`prototype`属性
+
+```js
+class A {
+}
+class B extends A {
+}
+console.log(B.__proto__ === A);
+console.log(B.prototype.__proto__ === A.prototype)
+//true
+```
+
+**原因**
+
+```js
+class A {
+}
+
+class B {
+}
+
+// B 的实例继承 A 的实例
+Object.setPrototypeOf(B.prototype, A.prototype);
+
+// B 继承 A 的静态属性
+Object.setPrototypeOf(B, A);
+
+const b = new B();
+Object.setPrototypeOf = function (obj, proto) {
+  obj.__proto__ = proto;
+  return obj;
+}
+```
+
+
+
+
+
+#### constructor
 
 `constructor`方法是类的默认方法，通过`new`命令生成对象实例时，自动调用该方法。一个类必须有`constructor`方法，如果没有显式定义，一个空的`constructor`方法会被默认添加。
 

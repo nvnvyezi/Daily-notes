@@ -783,7 +783,7 @@ CORS与JSONP相比，无疑更为先进、方便和可靠。
 
 服务器收到"预检"请求以后，检查了`Origin`、`Access-Control-Request-Method`和`Access-Control-Request-Headers`字段以后，确认允许跨源请求，就可以做出回应。
 
-> ```
+> ```http
 > HTTP/1.1 200 OK
 > Date: Mon, 01 Dec 2008 01:15:39 GMT
 > Server: Apache/2.0.61 (Unix)
@@ -800,13 +800,13 @@ CORS与JSONP相比，无疑更为先进、方便和可靠。
 
 上面的HTTP回应中，关键的是`Access-Control-Allow-Origin`字段，表示`http://api.bob.com`可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。
 
-> ```
+> ```http
 > Access-Control-Allow-Origin: *
 > ```
 
 如果浏览器否定了"预检"请求，会返回一个正常的HTTP回应，但是没有任何CORS相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被`XMLHttpRequest`对象的`onerror`回调函数捕获。控制台会打印出如下的报错信息。
 
-> ```
+> ```http
 > XMLHttpRequest cannot load http://api.alice.com.
 > Origin http://api.bob.com is not allowed by Access-Control-Allow-Origin.
 > ```

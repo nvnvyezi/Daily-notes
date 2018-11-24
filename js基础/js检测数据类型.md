@@ -55,13 +55,13 @@ function new_instance_of(leftVaule, rightVaule) {
 
 instanceof 操作符的问题在于，它假定只有一个全局执行环境。如果网页中包含多个框架，那实际上就存在两个以上不同的全局执行环境，从而存在两个以上不同版本的构造函数。如果你从一个框架向另一个框架传入一个数组，那么传入的数组与在第二个框架中原生创建的数组分别具有各自不同的构造函数。
 
-```
+```js
 `var` `iframe = document.createElement(``'iframe'``);``document.body.appendChild(iframe);``xArray = window.frames[0].Array;``var` `arr =``new` `xArray(1,2,3);``// [1,2,3]``arr instanceof Array;``// false`
 ```
 
 针对数组的这个问题，ES5 提供了 Array.isArray() 方法 。该方法用以确认某个对象本身是否为 Array 类型，而不区分该对象在哪个环境中创建。
 
-```
+```js
 `if` `(Array.isArray(value)){``   ``//对数组执行某些操作``}`
 ```
 

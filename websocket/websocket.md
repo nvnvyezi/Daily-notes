@@ -81,7 +81,7 @@ WebSocket一种在单个 TCP 连接上进行全双工通讯的协议。WebSocket
 
 ok,我们先看看api
 
-```
+```js
 // 创建一个socket实例：
 const socket = new WebSocket(ws://localhost:9093')
 // 打开socket
@@ -124,7 +124,7 @@ ws和wss：
 
 **客户端**
 
-```
+```http
 GET / HTTP/1.1
 Host: localhost:8080
 Origin: 
@@ -137,7 +137,7 @@ Sec-WebSocket-Protocol: chat, superchat
 
 **首先，客户端发起协议升级请求。可以看到，采用的是标准的HTTP报文格式，且只支持GET方法：**
 
-```
+```http
 Connection: Upgrade：表示要升级协议
 Upgrade: websocket：表示要升级到websocket协议。
 Sec-WebSocket-Version: 13：表示websocket的版本。如果服务端不支持该版本，需要返回一个Sec-WebSocket-Versionheader，里面包含服务端支持的版本号。
@@ -152,7 +152,7 @@ Sec-WebSocket-Key：与后面服务端响应首部的Sec-WebSocket-Accept是配�
 
 **服务端**
 
-```
+```http
 HTTP/1.1 101 Switching Protocols
 Connection:Upgrade
 Upgrade: websocket
@@ -160,7 +160,7 @@ Sec-WebSocket-Accept: Oy4NRAQ13jhfONC7bP8dTKb4PTU=
 Sec-WebSocket-Protocol: chat
 ```
 
-依然是固定的，告诉客户端即将升级的是Websocket协议，而不是mozillasocket，lurnarsocket或者shitsocket。
+s依然是固定的，告诉客户端即将升级的是Websocket协议，而不是mozillasocket，lurnarsocket或者shitsocket。
 然后，Sec-WebSocket-Accept 这个则是经过服务器确认，并且加密过后的 Sec-WebSocket-Key。
 
 Sec-WebSocket-Accept根据客户端请求首部的Sec-WebSocket-Key计算出来。
@@ -234,7 +234,7 @@ WebSocket协议中，数据掩码的作用是增强协议的安全性。但数�
 
 到这里，受害者可以登场了：
 
-- 1）受害者 通过 代理服务器 访问 正义服务器 的 正义资源；
+- 1）受害者 通过 代理服务器 访问 正义服务器 的 正义资源；s
 - 2）代理服务器 检查该资源的url、host，发现本地有一份缓存（伪造的）；
 - 3）代理服务器 将 邪恶资源 返回给 受害者；
 - 4）受害者 卒。
@@ -243,7 +243,7 @@ WebSocket协议中，数据掩码的作用是增强协议的安全性。但数�
 
 前面提到的精心构造的“HTTP请求报文”：
 
-```
+```http
 Client → Server:
 POST /path/of/attackers/choice HTTP/1.1 Host: host-of-attackers-choice.com Sec-WebSocket-Key: <connection-key>
 Server → Client:
@@ -257,7 +257,7 @@ Sec-WebSocket-Accept: <connection-key>
 
 **接下来看一些实现代码**
 
-```
+```js
 io.on('connection', function (socket) {
     // 当客户端发出“new message”时，服务端监听到并执行相关代码
     socket.on('new message', function (data) {
@@ -334,7 +334,7 @@ WebSocket模式客户端与服务器请求响应模式如下图：
 >
 > 假设到了1986年，人们使用浏览器来浏览网页，假设当时电脑时100MHz，100M内存。对TCP协议熟悉一点，大概也能猜到一个TCP链接，会消耗一点点内存，假设是32k（具体我也不知道），那么如果一台几万块钱的服务器最大能支持100M/32k＝3200个连接。显然，如果一个公司，面向全世界提供网页服务，如果使用TCP，最多也就3200个人同时看网页。
 > 于是服务器要求“所有客户端，打开网页之后，必须关闭TCP连接”。这就是（猜测的）HTTP的初衷了。
-> 按照这个协议，服务器接受TCP连接，几秒钟之内读取数据，检验之后，回复数据，断开连接。所谓的节省“资源”也没说明白到底节省了什么“资源”。等到二十年后，平行宇宙的2004年，QQ桌面版好好的，QQ网页版用的越来越多。由于浏览器都是连接之后很快断开，QQ网页版，只能靠各种polling方式持续交互数据（HTTP keep-alive也有自己的缺点，其他答主讲的很好），浪费大量的带宽（这时候带宽的费用就大了），同时客户端收到消息也不及时，还有各种其它问题。
+> 按照这个协议，服务器接受TCP连接，几秒钟之内读取数据，检验之后，回复数据，断开连接。所谓的节省“资源”也没说明白到底节省了什么“资源”。等到二十年后，平行宇宙的2004年，QQ桌面版好好的，QQ网页版用的越来越多。由于浏览器都是连接之后很快断开，QQ网页版，只能靠各种polling方式持续交互数据（HTTP keep-alive也有自己的缺点，其他答主讲的很好），浪费大量的带宽（这时候带宽的费用就大了），同时客户端收到s消息也不及时，还有各种其它问题。
 > QQ网页版想直接用TCP协议长时间连接，但是QQ网页版能做的，都是浏览器允许做的。可以说，websocket的出现，就是因为浏览器不支持TCP直连，不给开后门。
 > 于是“希望所有的浏览器都能够直接进行TCP连接”，于是浏览器出现了websocket协议。所以，因为某些原因，人们在TCP上面弄了一个HTTP协议，把TCP支持的一些特性删除了，然后若干年之后想要那些被删除的特性，返回TCP，于是出现了WebSocket。
 > WebSocket实际上可以看作HTTP的降级！“不是WebSocket基于HTTP，而是可以看成可以看成可以看成HTTP基于WebSocket”。具体协议细节其他答主讲的很好，就不重复了。包括从串口模拟出TCP，再模拟出HTTP，流接口变成块接口，都无所谓了。
@@ -381,3 +381,4 @@ WebSocket模式客户端与服务器请求响应模式如下图：
 - 由欧拉函数找出r，也就是找出小于N的所有质数的和r，r=(p-1)*(q-1);
 - 接着找出小于r的整数e，并且e和r互质，求出e关于r的模反元素d。
 - (N,e)就是公钥，(N,d)就是私钥。
+

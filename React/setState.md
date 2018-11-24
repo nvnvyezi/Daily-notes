@@ -20,7 +20,7 @@
 >
 > 在事件initialize阶段，一个update queue被创建。在事件中调用setState方法时，状态不会被立即调用，而是被push进Update queue中。
 >
-> 函数执行结束调用事件的close阶段，Update queue会被flush，这事新的状态才会被应用到组件上并开始后续的Virtual DOM更新，biff算法来对model更新。
+> 函数执行结束调用事件的close阶段，Update queue会被flush，这事新的状态才会被应用到组件上并开始后续的Virtual DOM更新，diff算法来对model更新。
 
 #### Vue 实现Batch Update
 
@@ -610,3 +610,8 @@ _addValue() {
 - 组件的更新是递归的, 三种不同类型的组件都有自己的`updateComponent`方法来决定自己的组件如何更新, 其中 ReactDOMComponent 会采用diff算法对比子元素中最小的变化, 再批量处理.
 
 ![](161df93690f3abac.png)
+
+
+
+>setstate很多人都认为他是异步的，因为在setstate 里面用对象更新之后有可能值并没有变，但是用函数更新之后可以拿到一个新的值，因此React给的解释也是不保证同步，先说一下setstate是哪里的，在我们创建组建的时候...，
+
