@@ -16,8 +16,6 @@
 
 ### JS
 
-[AJAX](https://github.com/nvnvyezi/Daily-notes/blob/master/ajax/ajax.md)
-
 [WebWorker](https://github.com/nvnvyezi/Daily-notes/blob/master/Worker/WebWorker.md)
 
 [ServiceWorker](https://github.com/nvnvyezi/Daily-notes/blob/master/Worker/ServiceWorker.md)
@@ -105,6 +103,8 @@
 
 
 ### 其他
+
+[AJAX](https://github.com/nvnvyezi/Daily-notes/blob/master/ajax/ajax.md)
 
 [跨域](https://github.com/nvnvyezi/Daily-notes/blob/master/cross-domain/cross.md)
 
