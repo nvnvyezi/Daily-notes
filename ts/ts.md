@@ -169,3 +169,114 @@ interface StringArray {
 - TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。
 
   
+
+### 工具泛型
+
+#### Partial
+
+将传入的属性变为可选属性
+
+```typescript
+type Partial<T> = { [P in keyof T]?: T[P] };
+```
+
+#### Required
+
+将传入的属性变为必选属性
+
+```typescript
+type Required<T> = { [P in keyof T]-?: T[P] };
+```
+
+#### Mutable
+
+对 `readonly` 进行加减.
+
+```typescript
+//移除T上所有属性的readonly
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
+}
+```
+
+#### Readonly
+
+将传入的属性变为只读
+
+```typescript
+type Readonly<T> = { readonly [P in keyof T]: T[P] };
+```
+
+#### Record
+
+将 K 中所有的属性的值转化为 T 类型
+
+```typescript
+type Record<K extends keyof any, T> = { [P in K]: T };
+```
+
+#### Pick
+
+从 T 中取出 一系列 K 的属性
+
+```typescript
+type Pick<T, K extends keyof T> = { [P in K]: T[P] };
+```
+
+#### Exclude
+
+Exclude 的作用是从 T 中找出 U 中没有的元素
+
+```typescript
+type Exclude<T, U> = T extends U ? never : T;
+type T = Exclude<1 | 2, 1 | 3> // -> 2
+```
+
+#### Extract
+
+提取出 T 包含在 U 中的元素
+
+```typescript
+type Extract<T, U> = T extends U ? T : never;
+```
+
+#### Omit
+
+忽略对象某些属性功能,
+
+```typescript
+type Omit = Pick<T, Exclude<keyof T, K>>
+
+// 使用
+type Foo = Omit<{name: string, age: number}, 'name'> // -> { age: number }
+```
+
+#### ReturnType
+
+ `infer`  :在条件类型语句中, 我们可以用 `infer` 声明一个类型变量并且对它进行使用,
+
+```typescript
+type ReturnType<T> = T extends (
+  ...args: any[]
+) => infer R
+  ? R
+  : any;
+//使用
+function foo(x: number): Array<number> {
+  return [x];
+}
+type fn = ReturnType<typeof foo>;
+```
+
+#### AxiosReturnType
+
+开发经常使用 axios 进行封装 API层 请求, 通常是一个函数返回一个 `AxiosPromise<Resp>`, 现在我想取到它的 Resp 类型, 根据上一个工具泛型的知识我们可以这样写.
+
+```typescript
+import { AxiosPromise } from 'axios' // 导入接口
+type AxiosReturnType<T> = T extends (...args: any[]) => AxiosPromise<infer R> ? R : any
+
+// 使用
+type Resp = AxiosReturnType<Api> // 泛型参数中传入你的 Api 请求函数
+```
+
