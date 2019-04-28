@@ -1,5 +1,3 @@
-[原文地址1](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=zh-cn)
-
 #### DOM
 
 ![](./full-process.png)
@@ -193,3 +191,7 @@ HTML 规范中规定了每个事件的具体条件：应在何时触发、应满
 2. 最大限度减少关键资源的数量：删除它们，延迟它们的下载，将它们标记为异步等。
 3. 优化关键字节数以缩短下载时间（往返次数）。
 4. 优化其余关键资源的加载顺序：您需要尽早下载所有关键资产，以缩短关键路径长度。
+
+### 参考
+
+[原文地址1](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=zh-cn)
