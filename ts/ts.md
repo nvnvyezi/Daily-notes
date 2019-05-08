@@ -1,4 +1,4 @@
-Tsc: 编辑器选项：https://www.typescriptlang.org/docs/handbook/compiler-options.html
+ Tsc: 编辑器选项：https://www.typescriptlang.org/docs/handbook/compiler-options.html
 
 ### 基础类型
 
