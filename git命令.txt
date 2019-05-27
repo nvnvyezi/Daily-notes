@@ -1,37 +1,12 @@
-Content-Type: text/x-zim-wiki
-Wiki-Format: zim 0.4
-Creation-Date: 2018-06-24T19:58:28+08:00
+### git add -u
 
-====== git命令 ======
-创建日期 星期日 24 六月 2018
+仅监控已经被add的文件，会将被修改的文件提交到暂存区，不会提交新文件
 
-git fetch命令用于从另一个存储库下载对象和引用。
+### git add .
 
-使用语法
+监控工作区的状态树，会讲工作时的所有变化提交到暂存区，包扩文件内容修改以及新文件，但不包括删除的文件（版本升级之后和-A效果好像一样）
 
-git fetch [<options>] [<repository> [<refspec>…]]
-git fetch [<options>] <group>
-git fetch --multiple [<options>] [(<repository> | <group>)…]
-git fetch --all [<options>]
-Shell
-描述
-从一个或多个其他存储库中获取分支和/或标签(统称为“引用”)以及完成其历史所必需的对象。 远程跟踪分支已更新(Git术语叫做commit)，需要将这些更新取回本地，这时就要用到git fetch命令。
+### git add -A
 
-默认情况下，还会获取指向正在获取的历史记录的任何标签; 效果是获取指向您感兴趣的分支的标签。可以使用--tags或--no-tags选项或通过配置远程.<name>.tagOpt 来更改此默认行为。 通过使用显式提取标签的refspec，可以获取不指向您感兴趣的分支的标签。
-
-git fetch可以从单个命名的存储库或URL中获取，也可以从多个存储库中获取，如果给定了<group>，并且配置文件中有一个远程<group>条目。
-
-获取的参考名称以及它们所指向的对象名称被写入到.git/FETCH_HEAD中。 此信息可能由脚本或其他git命令使用，如git-pull。
-
-**git branch [option] [name]** 
-
-如果不使用任何参数，它可以用来查看所有的分支,而在分支名前有*标记的则为主分支，如果加上name为创建新分支，,如git branch child,则会创建一个名为child的分支，此外，它有一些常用的参数：
-
-**git checkout [name]** 
-切换到对应的分支，对于上图，如果我们是使用 git checkout child，我们的head指针就会指向child分支了。这时候，如果我们提交新的更新D，我们会发现： 
-我们的D指向C，而C依然指向A，也就是说，以后我们在child分支上做的任何更新，都不会对master分支所在的之路造成任何影响！一旦使用了checkout命令，我们还会发现，不仅head指针会指向新的分支，而且当前工作目录中的文件也会换成了新分支对应的文件了。 
-此外，我们还可以使用git checkout -b [name]命令，它会新建一个分支，并自动将当前的工作目录切换到该分支上。 
-
-**git merge [name]** 
-合并分支，有的时候，我们创建次要分支，可能是为了修改原有程序的bug，或为了拓展新的功能，这时候如果我们想把次要分支的修改何并进主分支中，我们可以使用git merge 命令来实现。 
+上面两个功能的集合
 
