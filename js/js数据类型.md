@@ -47,4 +47,6 @@
 
 ### todo
 
-`ECMAScript中所有的函数都是按zhi`
+- `ECMAScript中所有的函数都是按值传递的`
+- null转换为数字为0
+- undefined转换为数字为NaN
