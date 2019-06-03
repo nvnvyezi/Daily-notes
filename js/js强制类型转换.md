@@ -1,15 +1,112 @@
+### 抽象值操作
+
+####  Tostring
+
+`toString()` 方法返回一个表示该对象的字符串。
+
+每个对象都有一个`toString()`方法，当该对象被表示为一个文本值时，或者一个对象以预期的字符串方式引用时自动调用。默认情况下，`toString()`方法被每个`Object`对象继承。如果此方法在自定义对象中未被覆盖，`toString()` 返回 "[object *type*]"，其中`type`是对象的类型。
+
+##### todo
+
+1. 从JavaScript1.8.5开始`toString()`调用 [`null`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/null)返回`[object Null]`，[`undefined`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/undefined) 返回`[object Undefined]`
+2. `Number`对象覆盖了`Object`对象上的`toString`方法，不是直接继承的`Object.prototype.toString`
+   1. 转换的基数（2到36），未指定的情况下默认为10，不在范围之内将抛出一个`RangeError`
+   2. 当要转换的值是负数的时候，结果会保留负号
+3. 数组`toString()`方法返回表示指定数组及其元素的字符串。
+   1. `toString`方法连接数组并返回一个字符串，其中包含用逗号分隔的每个数组元素。
+
+#### ToNumber
+
+将非数字值转换为数字值
+
+在转换对象时，会先转换为对应的基本类型值，当返回非数字的基本类型值，在进行进一步的转换，转换规则如下
+
+```js
+Number('23') 			//23
+Number('12f') 		//NaN
+Number(true) 			//1
+Number(false) 		//0
+Number(undefined) //NaN
+Number(null) 			//0
+Number(['23'])		//23
+Number({})				//NaN
+```
+
+#### ToPrimitive
+
+`Symbol.toPrimitive` 指将被调用的指定函数值的属性转换为相对应的原始值。
+
+ `Symbol.toPrimitive` 属性可以将一个对象转换为原始值。`该函数由字符串参数 hint 调用，`目的是指定原始值转换结果的首选类型。 hint 参数可以是`number`，`string`， 和 `default` 中的一种。
+
+在没有`Symbol.toPrimitive`的时候，会首先检查对象是否有`valueOf`方法，如果存在并且返回值为基本类型则使用此方法，否则继续查看对象是否存在`toString`方法，如果存在并且返回值为基本类型则使用此方法，否则将抛出`TypeError`
+
+
+
+```js
+// MDN的示例
+// 没有 Symbol.toPrimitive 属性的对象
+var obj1 = {};
+console.log(+obj1);     // NaN
+console.log(`${obj1}`); // "[object Object]"
+console.log(obj1 + ""); // "[object Object]"
+
+// 拥有 Symbol.toPrimitive 属性的对象
+var obj2 = {
+  [Symbol.toPrimitive](hint) {
+    if (hint == "number") {
+      return 10;
+    }
+    if (hint == "string") {
+      return "hello";
+    }
+    return true;
+  }
+};
+console.log(+obj2);     // 10      -- hint is "number"
+console.log(`${obj2}`); // "hello" -- hint is "string"
+console.log(obj2 + ""); // "true"  -- hint is "default"
+```
+
+#### toBoolean
+
+将JavaScript值转换为布尔值。
+
+转换规则如下
+
+````js
+//以下情况为false
+Boolean('') 				//false
+Boolean(+0)					//false
+Boolean(-0)					//false
+Boolean(NaN)				//false
+Boolean(undefined)	//false
+Boolean(null) 			//false
+Boolean(false) 			//false
+````
+
+### 显式类型转换
+
+显式强制类型转换是通过显而易见的、目的明确的代码将数据进行强制类型转换。
+
+字符串和数字之间是通过`String()`和`Number()`来进行呼吸那个转换的
+
+`String()`按照`ToString`规则，将值转换为字符串基本类型。
+
+`Number()`按照`ToNumber`规则，将值转换为数字基本类型。
+
+`+`运算符可以显式的将字符串或者日期转换为数字
+
+`!!`显式的将类型转换为布尔值
+
+### 隐式类型转换
+
+隐式强制类型转换往往是一些操作的附带产物，如if(){}中会将括号内的部分转换为布尔类型。
+
+参考数学运算符
+
 ### 类型转换规则
 
-![image-20190530214313217](js强制类型转换.assets/image-20190530214313217.png)
-
-#### if转换为false
-
-- null
-- undefined
-- ''
-- NaN
-- 0
-- false
+![image-20190530214313217](assets/image-20190530214313217.png)
 
 ### 数学运算符
 
@@ -26,7 +123,7 @@
 - 当一侧为`Number`类型，另一侧为原始类型，则将原始类型转换为`Number`类型。
 - 当一侧为`Number`类型，另一侧为引用类型，将引用类型和`Number`类型转换成字符串后拼接。
 
-#### todo
+##### todo
 
 ```js
 [] + {} // [object Object]
@@ -45,164 +142,82 @@
 
 "+[]"被解析为对于空数组的一元操作“+”，也就是将数组强制转换为数字
 
-### 显式类型转换
+#### ==
 
-显式强制类型转换是通过显而易见的、目的明确的代码将数据进行强制类型转换，如Number()就是将变量显式的强制转换为数字类型的值。
+##### NaN
 
-隐式强制类型转换往往是一些操作的附带产物，如if(){}中会将括号内的部分转换为布尔类型。
+`NaN`和其他任何类型比较永远返回`false`
 
-而关于”显式“和”隐式“是很主观的，如果+”123“对你来说，你一眼就能看出这是将字符串”123“转换为数字的操作，那么这对于你来说就是显式的强制类型转换。
+##### null/undefined
 
-> **4.将一个变量强制转换为字符串，你能说几种方法？**
+`null == undefined`比较结果是`true`，除此之外，`null、undefined`和其他任何结果的比较值都为`false`。
 
-- 使用String() ——String(123)
-- 直接调用toString()方法——var a = 123;a.toString();
-- 使用JSON.stringify()方法——JSON.stringify()
-- 利用字符串拼接——123+”“
+#####Boolean
 
-其中第一种最为稳妥。
+`Boolean`和其他任何类型比较，`Boolean`首先被转换为`Number`类型。
 
-第二种的缺点是，如果对象修改了自身的toString()方法的话，会影响到最终结果
+#####string/number
 
-第三种的缺点是，缺点还是很多的……，如果传入的参数本身就是字符串的话，返回的结果是带双引号的，如下面：
+`String`和`Number`比较，先将`String`转换为`Number`类型。
 
-```js
-JSON.stringify("123");    //""123""
-```
+##### 基本类型/引用类型
 
-如果传入的是Object还要确保没有递归引用，否则会抛出异常，如下面
+当基本类型和引用类型做比较时，对象类型会依照`ToPrimitive`规则转换为原始类型:
 
-```js
-var a = {},b = {};
-a.param = b;
-b.param = a;
-JSON.string(a);
-    //Uncaught TypeError: Converting circular structure to JSON
-```
+````js
+[] == ![] // true
+````
 
-[MDN](https://link.zhihu.com/?target=https%3A//developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)还给出了下面的注意提醒：
-
-关于序列化，有下面五点注意事项：
-
-- 非数组对象的属性不能保证以特定的顺序出现在序列化后的字符串中。
-- 布尔值、数字、字符串的包装对象在序列化过程中会自动转换成对应的原始值。
-- `undefined、`任意的函数以及 symbol 值，在序列化过程中会被忽略（出现在非数组对象的属性值中时）或者被转换成 `null`（出现在数组中时）。
-- 所有以 symbol 为属性键的属性都会被完全忽略掉，即便 `replacer` 参数中强制指定包含了它们。
-- 不可枚举的属性会被忽略
-
-第四种的缺点是，表面上看上去应该和第一种String()是一样的，但是其实还是有些差距的，下一题咱们再讨论。
-
-> **5.通常的两种转字符串的方法： String(a) 和 a+""。他们之间是否存在差异？**
-
-两者看上去都是将变量转换为字符串，但是还是有个细微差别的。
-
-看下面的例子：
+`!`的优先级高于`==`，`![]`首先会被转换为`false`，然后`false`转换成`Number`类型`0`，左侧`[]`转换为`0`，两侧比较相等。
 
 ```js
-var a = {
-	valueOf: ()=>"123",
-	toString: ()=>"456"
-}
-String(a);    //"456"
-a + "";    //"123"
+[null] == false // true
+[undefined] == false // true
 ```
 
-通过现象可以看得出来，String()是直接调用了a的toString()方法，而a+""则是先调用了valueOf()方法。原因是加运算是隐式强制类型转换，会对两端操作数进行ToPrimitive操作，前面已经说过，这里不再赘述。
+根据数组的`ToPrimitive`规则，数组元素为`null`或`undefined`时，该元素被当做空字符串处理，所以`[null]、[undefined]`都会被转换为`0`。
 
-这里有个经典的例子，就是在ES6下对于Symbol类型值进行字符串转换时。
+###宽松相等/严格相等
 
-```js
-var a = Symbol('first');
-String(a);    //"Symbol(first)"
-a + "";    //Uncaught TypeError: Cannot convert a Symbol value to a string
-```
+`==`允许在相等比较中进行强制类型转换，而`===`不允许。
 
-> **6.有哪些值强制转换成布尔类型时结果为false？**
+#### 比较时的转换规则
 
-**此题必考！**
+![](assets/v2-965475269c7d2316048bd0af38cafe4e_hd.jpg)
 
-- undefined
-- null
-- -0
-- +0
-- NaN
-- false
-- ""
+````js
+比较运算x==y, 其中x和y是值，产生true或者false。这样的比较按如下方式进行：
+1. 若Type(x)与Type(y)相同， 则
+	a. 若Type(x)为Undefined， 返回true。
+	b. 若Type(x)为Null， 返回true。
+	c. 若Type(x)为Number， 则
+		i. 若x为NaN， 返回false。
+		ii. 若y为NaN， 返回false。
+		iii. 若x与y为相等数值， 返回true。
+		iv. 若x 为 +0 且 y为−0， 返回true。
+		v. 若x 为 −0 且 y为+0， 返回true。
+		vi. 返回false。
+	d. 若Type(x)为String, 则当x和y为完全相同的字符序列（长度相等且相同字符在相同位置）时返回true。 否则， 返回false。
+	e. 若Type(x)为Boolean, 当x和y为同为true或者同为false时返回true。 否则， 返回false。
+	f. 当x和y为引用同一对象时返回true。否则，返回false。
+2. 若x为null且y为undefined， 返回true。
+3. 若x为undefined且y为null， 返回true。
+4. 若Type(x) 为 Number 且 Type(y)为String， 返回comparison x == ToNumber(y)的结果。
+5. 若Type(x) 为 String 且 Type(y)为Number，返回比较ToNumber(x) == y的结果。
+6. 若Type(x)为Boolean， 返回比较ToNumber(x) == y的结果。
+7. 若Type(y)为Boolean， 返回比较x == ToNumber(y)的结果。
+8. 若Type(x)为String或Number，且Type(y)为Object，返回比较x == ToPrimitive(y)的结果。
+9. 若Type(x)为Object且Type(y)为String或Number， 返回比较ToPrimitive(x) == y的结果。
+10. 返回false。
+````
 
-此外还有一种是假值对象，注意下面的代码（在Chrome中运行）
+### 参考
 
-```js
-document.all;    //输出当前文档下的所有标签
-Object.prototype.toString.call(document.all);    //[object HTMLAllCollection]
-Boolean(document.all);    //false,意外吧？！！！
-```
+[Object.toString](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/toString)
 
-> **7. 宽松相等——“==”和严格相等——“===”有什么区别？**
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive
 
-很多人会说——“==检查值是否相等，===检查值和类型是否相等”，
+https://juejin.im/post/5b3b76de5188251afc25567f
 
-正解应该是——“==允许在相等比较中进行强制类型转换，而===不允许”。
+https://juejin.im/post/5cec1bcff265da1b8f1aa08f
 
-> **8.下面的代码输出是什么？解释其原理。**
-
-```js
-var a = "666";
-var b = true;
-
-console.log(a == b);    //输出?
-```
-
-结果输出false
-
-还是会有一部分人会犯这个错误的，因为下面的代码我们经常会使用：
-
-```js
-if("666"){
-    console.log("代码会运行到这里");
-}
-```
-
-大家觉得"666"转换为布尔类型应该是true啊，所以上面的a==b应该是true。但其实并不是这样，关于宽松相等==来说逻辑十分复杂且晦涩难懂，难以记忆。
-
-这里我觉得答出是 false就可以了，因为有下面这个公式要记忆
-
-![](./v2-965475269c7d2316048bd0af38cafe4e_hd.jpg)
-
-> **9.什么样的处理可以使得下面的代码输出为true？**
-
-```js
-var s;
-/****
- * 一些处理
-****/
-console.log(s == 5 && s == 6);    //true，上面代码对s做了什么处理？
-```
-
-实际上我的处理是这样的（此题是我在《你不知道的JavaScript中卷》中看到的）：
-
-```js
-var s;
-var i = 5;
-s = {
-	valueOf: ()=>i++
-};
-console.log(s == 5 && s == 6);    //此时输出的结果就是true
-```
-
-此例重点是想提醒大家，每次的类型转换都会调用变量的valueOf()方法，应该尽量知道自己在做什么，才可以做类似这样的比较操作。
-
-> **10.将一个变量强制转换为数字类型时，都进行了哪些操作？**
-
-将变量强制转换为数字遵循的是ToNumber操作。
-
-对于基本类型的话：
-
-- true → 1
-- false → 0
-- undefined → NaN
-- null → 0
-- 对于字符串，遵循常量的相关规则语法，如果转化失败就返回NaN
-
-对于对象来说：
-
-会先进行去原始值操作ToPrimitive，即先检查该值是否有valueOf()方法，如果有并且返回的基本类型值，就使用该值进行转强制类型转换。如果不是就使用toString()的返回值进行强制类型转换。如果valueOf()和toString()均不返回基本类型值，会产生TypeError错误。
