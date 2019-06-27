@@ -1,5 +1,3 @@
-[原文地址1](https://blog.csdn.net/prstaxy/article/details/68940360)
-
 ### CSRF(跨站点请求伪造)
 
 `(Cross—Site Request Forgery)`
