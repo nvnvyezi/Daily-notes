@@ -1,36 +1,55 @@
-[原文地址1](https://segmentfault.com/a/1190000013315450)
+### XSS
 
-#### 分类
+`Cross-Site Scripting`，跨站点脚本攻击是一种注入类型,其中恶意脚本被注入到其他良性和可信赖的网站中,当攻击者使用Web应用程序将恶意代码(通常以浏览器端脚本的形式)发送给不同的最终用户时,就会触发XSS攻击。
 
-**反射型： **又称为非持久性跨站点脚本攻击，产生的原因是攻击者注入的数据反应在响应中。其要求用户访问一个被篡改后的连接，被植入的脚本被用户浏览器执行。
+通常发生在Web应用程序在其生成的输出中使用了来自用户的输入而无需验证或编码它的任何地方
 
-- 非持久化
-- 必须用户点击链接
+因为脚本来自可信赖的网站，所以恶意脚本可以访问任何cookie，session tokens或与该站点一起使用的一些敏感信息，或者让恶意脚本重写HTML内容
 
-**存储型： **又称为持久性跨站点脚本攻击，一般指XSS攻击代码被存进数据库中，在用户每次放问的时候都会执行。
+### 条件
 
-- 坏人把恶意的XSS代码提交网站--->网站把XSS代码存储进数据库--->当页面再次被其他正常用户请求时，服务器发送已经被植入XSS代码的数据给客户端--->客户端执行XSS代码
+1. 数据通过不受信任的来源进入Web应用程序（如Web请求）
+2. 数据包含在动态内容中，该动态内容在未经过验证的情况下发送给Web用户
 
-**基于DOM的XSS： **客户端脚本自身解析不正确
+### 分类
 
+#### 反射型（非持久性）
 
+指注入的脚本从服务器反射出来的攻击，例如错误消息，搜索结果或包含服务器的其他响应。攻击可以通过电子邮件或者欺骗用户点击恶意链接，提交特制的表单或者只是浏览恶意网站时
 
-#### 防御
+#### 存储型（持久性）
+
+注入的脚本永久存储在目标服务器上的攻击，例如在数据库，消息论坛，访问者日志，注释字段等中
+
+##### 流程
+
+将恶意的XSS代码提交网站--->网站把XSS代码存储进数据库--->当页面再次被其他正常用户请求时，服务器发送已经被植入XSS代码的数据给客户端--->客户端执行XSS代码
+
+#### 基于DOM的XSS（0型XSS）
+
+不需要服务器的参与，客户端脚本自身解析不正确
+
+### 防御
 
 1. 将用户输入的内容进行转义
-
 2. 对一些特殊字符进行转义
+3. 使用自动转义模版系统
+4. **CSP(Content Security Policy)**[内容安全策略MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP)
+5. `httpOnly`
+6. `X-XSS-Protection`：一般默认启用，[MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection)
 
-3. **CSP(Content Security Policy)**内容安全策略（Content Security Policy，简称CSP）是一种以可信白名单作机制，来限制网站中是否可以包含某来源内容。默认配置下不允许执行内联代码（<script>块内容，内联事件，内联样式），以及禁止执行eval() , newFunction() , setTimeout([string], ...) 和setInterval([string], ...) 。
+### NOTES
 
-   1. 只允许本站资源`Content-Security-Policy： default-src ‘self’`
+存储，反射，DOM三种不同类型的XSS存在重叠，在2012年中开始使用两个新术语来帮助组织可能发生的XSS类型
 
-   2. 允许本站的资源以及任意位置的图片以及 [https://segmentfault.com](https://segmentfault.com/) 下的脚本。
+#### 服务器XSS
 
-      ```js
-      Content-Security-Policy： default-src ‘self’; img-src *;
-      script-src https://segmentfault.com
-      ```
+恶意数据包含在服务器生成的HTML响应中。此数据的来源可以来自请求，也可以来自存储的位置。
 
-4. `httpOnly`
+#### 客户端XSS
 
+当不受信任的用户提供的数据用于使用不安全的JavaScript调用更新DOM。此数据可能来自DOM，也可能由服务器发送， 
+
+### 参考
+
+[主人的CheatSheetSeries / Cross_Site_Scripting_Prevention_Cheat_Sheet.md·OWASP / CheatSheetSeries](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md)

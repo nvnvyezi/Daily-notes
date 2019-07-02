@@ -1,3 +1,7 @@
+### 查看博客
+
+[博客](https://nvnvyezi.club/)
+
 ## 女女复习日记
 
 ### HTML/HTML5
